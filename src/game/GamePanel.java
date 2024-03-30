@@ -1,6 +1,7 @@
 package game;
 
 import levels.Level;
+import levels.TileType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +49,8 @@ public class GamePanel extends JPanel {
         int x = player.getPosX();
         int y = player.getPosY();
 
+        System.out.println("x:" + x + " y:" + y + " d: "+ direction);
+
         if (x % grid != 0 || y % grid != 0) {
             switch (direction) {
                 case "up" -> player.updateY(-speed);
@@ -56,22 +59,59 @@ public class GamePanel extends JPanel {
                 case "right" -> player.updateX(speed);
             }
         } else {
-            if (keyHandler.up && y >= tileSize) {
-                player.updateY(-speed);
+            if (keyHandler.up && y > tileSize) {
                 direction = "up";
+                if (canMove(direction, x, y)) {
+                    player.updateY(-speed);
+                }
             } else if (keyHandler.down && y < (this.height - tileSize)) {
-                player.updateY(speed);
                 direction = "down";
-            } else if (keyHandler.left && x >= tileSize) {
-                player.updateX(-speed);
+                if (canMove(direction, x, y)) {
+                    player.updateY(speed);
+                }
+            } else if (keyHandler.left && x > tileSize) {
                 direction = "left";
+                if (canMove(direction, x, y)) {
+                    player.updateX(-speed);
+                }
             } else if (keyHandler.right && x < (this.width - tileSize)) {
-                player.updateX(speed);
                 direction = "right";
+                if (canMove(direction, x, y)) {
+                    player.updateX(speed);
+                }
             }
         }
         repaint();
     }
+
+    public boolean canMove(String direction, int x, int y){
+        boolean can = true;
+        switch (direction) {
+            case "up" -> {
+                if (level.getTileTypeOnPosition(x,y-50) == TileType.WALL){
+                    can = false;
+                }
+            }
+            case "down" -> {
+                if (level.getTileTypeOnPosition(x,y+50) == TileType.WALL){
+                    can = false;
+                }
+            }
+            case "left" -> {
+                if (level.getTileTypeOnPosition(x-50,y) == TileType.WALL){
+                    can = false;
+                }
+            }
+            case "right" -> {
+                if (level.getTileTypeOnPosition(x+50,y) == TileType.WALL){
+                    can = false;
+                }
+            }
+        }
+        return can;
+    }
+
+
 
 
     /*public void draw(Graphics2D g2){

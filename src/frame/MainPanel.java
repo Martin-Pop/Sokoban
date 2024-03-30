@@ -34,9 +34,7 @@ public class MainPanel extends JPanel implements Runnable{
 
         while (gameThread != null){
 
-            //System.out.println("updating");
             gamePanel.updateGame();
-            //repaint();
 
             try {
                 double remainingTime = nextInterval - System.nanoTime();

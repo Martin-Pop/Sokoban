@@ -13,18 +13,6 @@ public class Player {
     private int roomWidth;
     private int roomHeight;
 
-
-    BufferedImage image, floor;
-
-    {
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png"));
-            floor = ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Player(int roomWidth, int roomHeight) {
         this.roomWidth = roomWidth;
         this.roomHeight = roomHeight;

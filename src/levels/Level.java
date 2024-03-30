@@ -25,17 +25,7 @@ public class Level {
     }
 
     public void createTiles(){
-        /*BufferedImage wall, floor;
-        {
-            try {
-                wall = ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png"));
-                floor = ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        tileMap.put("wall",new Tile(wall,TileType.WALL));
-        tileMap.put("floor",new Tile(floor,TileType.FLOOR));*/
+
         try {
             tileMap.put("floor",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png")),TileType.FLOOR));
             tileMap.put("wall",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png")),TileType.WALL));
@@ -66,6 +56,14 @@ public class Level {
         }catch (Exception e){
             throw new RuntimeException(e);
         }
+    }
+
+    public TileType getTileTypeOnPosition(int x, int y){
+        return tiles[x/50][y/50].getTileType();
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
     }
 
     public void drawLevel(Graphics2D g2){
