@@ -29,8 +29,8 @@ public class MainPanel extends JPanel implements Runnable{
 
     @Override
     public void run() {
-        double drawInterval = 1000000000/60;
-        double nextInterval = System.nanoTime() + drawInterval;
+        double runInterval = 1000000000/60;
+        double nextInterval = System.nanoTime() + runInterval;
 
         while (gameThread != null){
 
@@ -45,7 +45,7 @@ public class MainPanel extends JPanel implements Runnable{
                 }
                 Thread.sleep((long) remainingTime);
 
-                nextInterval += drawInterval;
+                nextInterval += runInterval;
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

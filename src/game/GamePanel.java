@@ -42,7 +42,7 @@ public class GamePanel extends JPanel {
 
     String direction;
     int grid = 50;
-    int speed = 5;
+    int speed = 5; // must divide 50 evenly
     //GRID WALK ON TOP
     public void updateGame() {
 
