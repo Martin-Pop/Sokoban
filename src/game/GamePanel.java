@@ -2,9 +2,11 @@ package game;
 
 import levels.Level;
 import levels.TileType;
+import levels.tiles.Tile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
 
@@ -17,6 +19,7 @@ public class GamePanel extends JPanel {
     private int tileSize;
 
     private Level level;
+    private ArrayList<Box> boxes;
 
 
     public GamePanel(int width, int height, int tileSize, Level level) {
@@ -32,6 +35,7 @@ public class GamePanel extends JPanel {
         this.tileSize = tileSize;
 
         this.level = level;
+        this.boxes = level.getBoxes();
         //level.loop();
 
         System.out.println(width);
@@ -40,83 +44,79 @@ public class GamePanel extends JPanel {
 
     }
 
-    String direction;
+    Direction direction = Direction.NONE;
+    Direction lastDirection;
     int grid = 50;
-    int speed = 5; // must divide 50 evenly
+    int speed = 5; // must divide 50 evenly (grid)
     //GRID WALK ON TOP
+    Box box;
     public void updateGame() {
 
-        int x = player.getPosX();
-        int y = player.getPosY();
+        int playerX = player.getPosX();
+        int playerY = player.getPosY();
 
-        System.out.println("x:" + x + " y:" + y + " d: "+ direction);
+        System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
 
-        if (x % grid != 0 || y % grid != 0) {
-            switch (direction) {
-                case "up" -> player.updateY(-speed);
-                case "down" -> player.updateY(speed);
-                case "left" -> player.updateX(-speed);
-                case "right" -> player.updateX(speed);
+        if (playerX % 50 != 0 || playerY % 50 != 0){ // if player is still moving
+            player.move(lastDirection, speed);
+            if (box != null){ // if box is being pushed
+                box.move(lastDirection,speed);
             }
-        } else {
-            if (keyHandler.up && y > tileSize) {
-                direction = "up";
-                if (canMove(direction, x, y)) {
-                    player.updateY(-speed);
-                }
-            } else if (keyHandler.down && y < (this.height - tileSize)) {
-                direction = "down";
-                if (canMove(direction, x, y)) {
-                    player.updateY(speed);
-                }
-            } else if (keyHandler.left && x > tileSize) {
-                direction = "left";
-                if (canMove(direction, x, y)) {
-                    player.updateX(-speed);
-                }
-            } else if (keyHandler.right && x < (this.width - tileSize)) {
-                direction = "right";
-                if (canMove(direction, x, y)) {
-                    player.updateX(speed);
+        }else {
+            System.out.println("NEW DIRECTION");
+            direction = keyHandler.direction;
+            if (direction != Direction.NONE){ // if player is moving
+                Tile nextTile = getNextTile(direction, playerX, playerY, false);
+                if (nextTile.getTileType() != TileType.WALL){ // if next tile is not a wall
+                    System.out.println("getting box" + " " + playerX + " " + playerY);
+                    box = getCurrentBox(direction,playerX,playerY);
+                    System.out.println(box);
+                    if (box != null){ // if the next tile has a box
+                        Tile tileBehindBox = getNextTile(direction, playerX , playerY , true);
+                        if (tileBehindBox.getTileType() !=TileType.WALL){ // if there is no wall behind the box
+                            box.move(direction,speed);
+                            player.move(direction,speed);
+                        }
+                    }else {
+                        player.move(direction,speed);
+                    }
+
+                    lastDirection = direction;
                 }
             }
+
         }
+
         repaint();
     }
 
-    public boolean canMove(String direction, int x, int y){
-        boolean can = true;
-        switch (direction) {
-            case "up" -> {
-                if (level.getTileTypeOnPosition(x,y-50) == TileType.WALL){
-                    can = false;
-                }
-            }
-            case "down" -> {
-                if (level.getTileTypeOnPosition(x,y+50) == TileType.WALL){
-                    can = false;
-                }
-            }
-            case "left" -> {
-                if (level.getTileTypeOnPosition(x-50,y) == TileType.WALL){
-                    can = false;
-                }
-            }
-            case "right" -> {
-                if (level.getTileTypeOnPosition(x+50,y) == TileType.WALL){
-                    can = false;
-                }
-            }
+    public Box getCurrentBox(Direction d, int x, int y){
+        Box b;
+        switch (d){
+            case UP -> b = level.getBoxOnPosition(x,y-50);
+            case DOWN ->  b = level.getBoxOnPosition(x,y+50);
+            case LEFT -> b = level.getBoxOnPosition(x-50,y);
+            case RIGHT -> b = level.getBoxOnPosition(x+50,y);
+            default -> b = null;
         }
-        return can;
+        return b;
     }
 
-
-
-
-    /*public void draw(Graphics2D g2){
-        g2.fillRect(posX,posY,100,100);
-    }*/
+    public Tile getNextTile(Direction d, int x, int y, Boolean checkSecondNextTile){
+        int multiplayer = 1;
+        if (checkSecondNextTile){
+            multiplayer = 2;
+        }
+        Tile tile;
+        switch (d){
+            case UP -> tile = level.getTileOnPosition(x,y-(50*multiplayer));
+            case DOWN ->  tile = level.getTileOnPosition(x,y+(50*multiplayer));
+            case LEFT -> tile = level.getTileOnPosition(x-(50*multiplayer),y);
+            case RIGHT -> tile = level.getTileOnPosition(x+(50*multiplayer),y);
+            default -> tile = null;
+        }
+        return tile;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {

@@ -21,6 +21,15 @@ public class Player {
         this.posY = roomHeight/2;
     }
 
+    public void move(Direction d,int speed){
+        switch (d){
+            case UP -> updateY(-speed);
+            case DOWN ->  updateY(speed);
+            case LEFT -> updateX(-speed);
+            case RIGHT -> updateX(speed);
+        }
+    }
+
     public void updateX(int value){
         this.posX += value;
     }
@@ -29,9 +38,7 @@ public class Player {
         this.posY += value;
     }
 
-    public void updatePlayer(){
 
-    }
 
     public int getPosX() {
         return posX;

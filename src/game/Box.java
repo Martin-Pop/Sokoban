@@ -25,6 +25,15 @@ public class Box {
         return posY;
     }
 
+    public void move(Direction d, int speed){
+        switch (d){
+            case UP -> posY -= speed;
+            case DOWN ->  posY += speed;
+            case LEFT -> posX -= speed;
+            case RIGHT -> posX += speed;
+        }
+    }
+
     public BufferedImage getImage() {
         return image;
     }

@@ -1,6 +1,7 @@
 package levels;
 
 import game.Box;
+import game.Direction;
 import levels.tiles.Tile;
 
 import javax.imageio.ImageIO;
@@ -69,12 +70,22 @@ public class Level {
         }
     }
 
-    public TileType getTileTypeOnPosition(int x, int y){
-        return tiles[x/50][y/50].getTileType();
+    public Box getBoxOnPosition(int x, int y){
+        Box b = null;
+        for (Box box : boxes){
+            if (box.getPosX() == x && box.getPosY() == y){
+                b = box;
+            }
+        }
+        return b;
     }
 
-    public Tile[][] getTiles() {
-        return tiles;
+    public Tile getTileOnPosition(int x, int y){
+        return tiles[x/50][y/50];
+    }
+
+    public ArrayList<Box> getBoxes() {
+        return boxes;
     }
 
     public void drawLevel(Graphics2D g2){
