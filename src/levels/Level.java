@@ -1,7 +1,6 @@
 package levels;
 
 import game.Box;
-import game.Direction;
 import levels.tiles.Tile;
 
 import javax.imageio.ImageIO;
@@ -56,7 +55,7 @@ public class Level {
                         case "2" -> tiles[i][column] = tileMap.get("boxDestination");
                         case "3" -> {
                             tiles[i][column] = tileMap.get("floor");
-                            boxes.add(new Box(i*50,column*50,boxCount,ImageIO.read(getClass().getResourceAsStream("/levels/tiles/box.png"))));
+                            boxes.add(new Box(i*50,column*50,boxCount,ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayCrate.png"))));
                             boxCount++;
                         }
                     }
@@ -70,7 +69,7 @@ public class Level {
         }
     }
 
-    public Box getBoxOnPosition(int x, int y){
+    public Box checkBoxOnPosition(int x, int y){
         Box b = null;
         for (Box box : boxes){
             if (box.getPosX() == x && box.getPosY() == y){
