@@ -1,5 +1,7 @@
 package game;
 
+import game.movement.KeyHandler;
+import game.movement.MovementStack;
 import levels.Level;
 import levels.TileType;
 import levels.tiles.Tile;
@@ -10,6 +12,7 @@ import java.awt.*;
 public class GamePanel extends JPanel {
 
     KeyHandler keyHandler = new KeyHandler(this);
+    MovementStack stack = new MovementStack();
     private Player player;
 
     private int width;
@@ -43,7 +46,7 @@ public class GamePanel extends JPanel {
     Direction direction = Direction.NONE;
     Direction lastDirection;
     int grid = 50;
-    int speed = 2; // speed is dynamic ()
+    int speed = 3; // speed is dynamic ()
 
     Box box; //current box
     public void updateGame() {
@@ -52,7 +55,7 @@ public class GamePanel extends JPanel {
         int playerY = player.getPosY();
 
         System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
-
+        //TODO if keyHandler gets signal to revert movement, reset direction and get the last move from stack
         if (playerX % 50 != 0 || playerY % 50 != 0){ // if player is still moving
 
             int remaining = calculateRemaining(lastDirection, playerX, playerY);
@@ -77,11 +80,15 @@ public class GamePanel extends JPanel {
                         Tile tileBehindBox = getNextTile(direction, playerX , playerY , true);
 
                         if (tileBehindBox.getTileType() !=TileType.WALL && getBox(direction,playerX,playerY, true) == null){ // if there is no wall or box behind the box
+                            //TODO here add last movement to the stack
                             box.move(direction,speed);
                             player.move(direction,speed);
+
+                            box.setCorrectPosition(tileBehindBox.getTileType() == TileType.BOX_DESTINATION);
                         }
 
                     }else {
+                        //TODO also here
                         player.move(direction,speed);
                     }
 

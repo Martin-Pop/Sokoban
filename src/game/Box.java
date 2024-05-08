@@ -7,14 +7,18 @@ public class Box {
     private int posX;
     private int posY;
 
+    private boolean correctPosition = false;
+
     private int boxNumber;
     private BufferedImage image;
+    private BufferedImage winnerImage;
 
-    public Box(int posX, int posY, int boxNumber, BufferedImage image) {
+    public Box(int posX, int posY, int boxNumber, BufferedImage image, BufferedImage winnerImage) {
         this.posX = posX;
         this.posY = posY;
         this.boxNumber = boxNumber;
         this.image = image;
+        this.winnerImage = winnerImage;
     }
 
     public int getPosX() {
@@ -23,6 +27,14 @@ public class Box {
 
     public int getPosY() {
         return posY;
+    }
+
+    public boolean isCorrectPosition() {
+        return correctPosition;
+    }
+
+    public void setCorrectPosition(boolean correctPosition) {
+        this.correctPosition = correctPosition;
     }
 
     public void move(Direction d, int speed){
@@ -36,5 +48,9 @@ public class Box {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public BufferedImage getWinnerImage() {
+        return winnerImage;
     }
 }

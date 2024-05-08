@@ -31,7 +31,7 @@ public class Level {
         try {
             tileMap.put("floor",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png")),TileType.FLOOR));
             tileMap.put("wall",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png")),TileType.WALL));
-            tileMap.put("boxDestination",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/box_destination.png")),TileType.BOX_DESTINATION));
+            tileMap.put("boxDestination",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/boxDestination.png")),TileType.BOX_DESTINATION));
         }catch (Exception e){
             System.out.println("TILE IMAGE PATH DOES NOT EXIST");
         }
@@ -55,7 +55,10 @@ public class Level {
                         case "2" -> tiles[i][column] = tileMap.get("boxDestination");
                         case "3" -> {
                             tiles[i][column] = tileMap.get("floor");
-                            boxes.add(new Box(i*50,column*50,boxCount,ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayCrate.png"))));
+                            boxes.add(new Box(i*50,column*50,boxCount,
+                                    ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayBox.png")),
+                                    ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
+                            ));
                             boxCount++;
                         }
                     }
@@ -96,7 +99,11 @@ public class Level {
         }
         //boxes
         for (Box box: boxes) {
-            g2.drawImage(box.getImage(),box.getPosX(), box.getPosY(),50,50,null);
+            if (box.isCorrectPosition()){
+                g2.drawImage(box.getWinnerImage(),box.getPosX(), box.getPosY(),50,50,null);
+            }else {
+                g2.drawImage(box.getImage(),box.getPosX(), box.getPosY(),50,50,null);
+            }
         }
     }
 

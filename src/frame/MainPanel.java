@@ -1,7 +1,7 @@
 package frame;
 
 import game.GamePanel;
-import game.KeyHandler;
+import game.movement.KeyHandler;
 import levels.Level;
 
 import javax.swing.*;

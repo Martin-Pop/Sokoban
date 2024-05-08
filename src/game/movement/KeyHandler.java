@@ -1,4 +1,6 @@
-package game;
+package game.movement;
+
+import game.Direction;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -6,7 +8,6 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean up,down,left,right = false;
     public Direction direction = Direction.NONE;
 
     JPanel panel;
