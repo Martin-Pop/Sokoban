@@ -4,39 +4,59 @@ import game.Box;
 import game.Direction;
 
 public class Movement {
-    private int playerMovedBy; // how many tiles player moved
-    private int boxMovedBy; // how many tiles box moved (if did)
-    private Box box; // box that player moved (if did)
+    private int boxX;
+    private int boxY;
 
-    private Direction direction;
+    private int playerX;
+    private int playerY;
 
-    public Movement(int playerMovedBy, Direction direction) {
-        this.playerMovedBy = playerMovedBy;
-        this.direction = direction;
+    private Box box;
 
-        this.box = null;
-    }
-
-    public Movement(int playerMovedBy, int boxMovedBy, Box box, Direction direction) {
-        this.playerMovedBy = playerMovedBy;
-        this.boxMovedBy = boxMovedBy;
+    public Movement(Box box, int boxX, int boxY, Direction direction) {
         this.box = box;
-        this.direction = direction;
+        this.boxX = boxX;
+        this.boxY = boxY;
+
+        setPlayerPosition(direction);
+
     }
 
-    public int getPlayerMovedBy() {
-        return playerMovedBy;
+    private void setPlayerPosition(Direction direction){
+        switch (direction){
+            case UP -> {playerX = boxX; playerY = boxY+50;}
+            case DOWN -> {playerX = boxX; playerY = boxY-50;}
+            case LEFT ->  {playerX = boxX+50; playerY = boxY;}
+            case RIGHT -> {playerX = boxX-50; playerY = boxY;}
+        }
     }
 
-    public int getBoxMovedBy() {
-        return boxMovedBy;
+    public int getBoxX() {
+        return boxX;
+    }
+
+    public int getBoxY() {
+        return boxY;
+    }
+
+    public int getPlayerX() {
+        return playerX;
+    }
+
+    public int getPlayerY() {
+        return playerY;
     }
 
     public Box getBox() {
         return box;
     }
 
-    public Direction getDirection() {
-        return direction;
+    @Override
+    public String toString() {
+        return "Movement{" +
+                "boxX=" + boxX +
+                ", boxY=" + boxY +
+                ", playerX=" + playerX +
+                ", playerY=" + playerY +
+                '}';
     }
 }

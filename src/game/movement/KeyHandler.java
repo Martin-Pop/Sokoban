@@ -1,6 +1,7 @@
 package game.movement;
 
 import game.Direction;
+import game.GamePanel;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -9,11 +10,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     public Direction direction = Direction.NONE;
-
-    JPanel panel;
-    public KeyHandler(JPanel panel) {
-        this.panel = panel;
-    }
+    public boolean reset;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -27,6 +24,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_S -> direction = Direction.DOWN;
             case KeyEvent.VK_A -> direction = Direction.LEFT;
             case KeyEvent.VK_D -> direction = Direction.RIGHT;
+            case KeyEvent.VK_R -> reset = true;
         }
     }
 

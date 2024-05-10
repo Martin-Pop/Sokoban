@@ -1,6 +1,7 @@
 package game;
 
 import game.movement.KeyHandler;
+import game.movement.Movement;
 import game.movement.MovementStack;
 import levels.Level;
 import levels.TileType;
@@ -11,7 +12,7 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
 
-    KeyHandler keyHandler = new KeyHandler(this);
+    KeyHandler keyHandler = new KeyHandler();
     MovementStack stack = new MovementStack();
     private Player player;
 
@@ -35,65 +36,86 @@ public class GamePanel extends JPanel {
         this.tileSize = tileSize;
 
         this.level = level;
-        //level.loop();
-
-        System.out.println(width);
-        System.out.println(height);
-
 
     }
 
     Direction direction = Direction.NONE;
     Direction lastDirection;
+
+    int boxMoved = 0; //if box was moved more tiles in one direction
     int grid = 50;
     int speed = 3; // speed is dynamic ()
 
     Box box; //current box
+
     public void updateGame() {
 
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 
-        System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
-        //TODO if keyHandler gets signal to revert movement, reset direction and get the last move from stack
-        if (playerX % 50 != 0 || playerY % 50 != 0){ // if player is still moving
+        //System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
+
+        if (keyHandler.reset) {
+            //TODO set back the box color
+            if (!stack.isEmpty()) {
+                System.out.println("RESET");
+                Movement m = stack.pop();
+                System.out.println(m);
+                player.setPosX(m.getPlayerX());
+                player.setPosY(m.getPlayerY());
+
+                m.getBox().setPosX(m.getBoxX());
+                m.getBox().setPosY(m.getBoxY());
+                keyHandler.reset = false;
+                return;
+            } else {
+                System.out.println("NOO");
+                keyHandler.reset = false;
+            }
+        }
+        if (playerX % 50 != 0 || playerY % 50 != 0) { // if player is still moving
 
             int remaining = calculateRemaining(lastDirection, playerX, playerY);
-            System.out.println("remaining : "+ remaining);
+            //System.out.println("remaining : "+ remaining);
 
             player.move(lastDirection, Math.min(speed, remaining));
 
-            if (box != null){ // if box is being pushed
+            if (box != null) { // if box is being pushed
                 box.move(lastDirection, Math.min(speed, remaining));
             }
-
-        }else {
+        } else {
             direction = keyHandler.direction;
-            if (direction != Direction.NONE){ // if player is moving
+
+            if (direction != Direction.NONE) { // if player is moving
+
                 Tile nextTile = getNextTile(direction, playerX, playerY, false);
 
-                if (nextTile.getTileType() != TileType.WALL){ // if next tile is not a wall
-                    System.out.println("getting box" + " " + playerX + " " + playerY);
-                    box = getBox(direction,playerX,playerY, false);
+                if (nextTile.getTileType() != TileType.WALL) { // if next tile is not a wall
+                    //System.out.println("getting box" + " " + playerX + " " + playerY);
+                    box = getBox(direction, playerX, playerY, false);
 
-                    if (box != null){ // if the next tile has a box
-                        Tile tileBehindBox = getNextTile(direction, playerX , playerY , true);
+                    if (box != null) { // if the next tile has a box
+                        Tile tileBehindBox = getNextTile(direction, playerX, playerY, true);
 
-                        if (tileBehindBox.getTileType() !=TileType.WALL && getBox(direction,playerX,playerY, true) == null){ // if there is no wall or box behind the box
-                            //TODO here add last movement to the stack
-                            box.move(direction,speed);
-                            player.move(direction,speed);
+                        if (tileBehindBox.getTileType() != TileType.WALL && getBox(direction, playerX, playerY, true) == null) { // if there is no wall or box behind the box
 
+                            if (boxMoved == 0) {
+                                stack.add(new Movement(box, box.getPosX(), box.getPosY(), direction));
+                            }
+
+                            box.move(direction, speed);
+                            player.move(direction, speed);
+
+                            boxMoved++;
                             box.setCorrectPosition(tileBehindBox.getTileType() == TileType.BOX_DESTINATION);
                         }
-
-                    }else {
-                        //TODO also here
-                        player.move(direction,speed);
+                    } else {
+                        player.move(direction, speed);
                     }
-
                     lastDirection = direction;
                 }
+            } else {
+                boxMoved = 0;
             }
 
         }
@@ -101,48 +123,72 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
-    private int calculateRemaining(Direction d, int playerX, int playerY){
-        int rem;
-        switch (d){
-            case UP -> rem = playerY % 50;
-            case DOWN ->  rem = 50 - (playerY % 50);
-            case LEFT -> rem = playerX % 50;
-            case RIGHT -> rem = 50 - (playerX % 50);
-            default -> rem = 0;
+    private int calculateRemaining(Direction d, int playerX, int playerY) {
+        switch (d) {
+            case UP -> {
+                return playerY % 50;
+            }
+            case DOWN -> {
+                return 50 - (playerY % 50);
+            }
+            case LEFT -> {
+                return playerX % 50;
+            }
+            case RIGHT -> {
+                return 50 - (playerX % 50);
+            }
+            default -> {
+                return 0;
+            }
         }
-        return rem;
     }
 
-    public Box getBox(Direction d, int x, int y, Boolean checkSecondNextTile){
+    public Box getBox(Direction d, int x, int y, Boolean checkSecondNextTile) {
         int multiplayer = 1;
-        if (checkSecondNextTile){
+        if (checkSecondNextTile) {
             multiplayer = 2;
         }
-        Box b;
-        switch (d){
-            case UP -> b = level.checkBoxOnPosition(x,y-(50*multiplayer));
-            case DOWN ->  b = level.checkBoxOnPosition(x,y+(50*multiplayer));
-            case LEFT -> b = level.checkBoxOnPosition(x-(50*multiplayer),y);
-            case RIGHT -> b = level.checkBoxOnPosition(x+(50*multiplayer),y);
-            default -> b = null;
+        switch (d) {
+            case UP -> {
+                return level.checkBoxOnPosition(x, y - (50 * multiplayer));
+            }
+            case DOWN -> {
+                return level.checkBoxOnPosition(x, y + (50 * multiplayer));
+            }
+            case LEFT -> {
+                return level.checkBoxOnPosition(x - (50 * multiplayer), y);
+            }
+            case RIGHT -> {
+                return level.checkBoxOnPosition(x + (50 * multiplayer), y);
+            }
+            default -> {
+                return null;
+            }
         }
-        return b;
     }
 
-    private Tile getNextTile(Direction d, int x, int y, Boolean checkSecondNextTile){
+    private Tile getNextTile(Direction d, int x, int y, Boolean checkSecondNextTile) {
         int multiplayer = 1;
-        if (checkSecondNextTile){
+        if (checkSecondNextTile) {
             multiplayer = 2;
         }
-        Tile tile;
-        switch (d){
-            case UP -> tile = level.getTileOnPosition(x,y-(50*multiplayer));
-            case DOWN ->  tile = level.getTileOnPosition(x,y+(50*multiplayer));
-            case LEFT -> tile = level.getTileOnPosition(x-(50*multiplayer),y);
-            case RIGHT -> tile = level.getTileOnPosition(x+(50*multiplayer),y);
-            default -> tile = null;
+        switch (d) {
+            case UP -> {
+                return level.getTileOnPosition(x, y - (50 * multiplayer));
+            }
+            case DOWN -> {
+                return level.getTileOnPosition(x, y + (50 * multiplayer));
+            }
+            case LEFT -> {
+                return level.getTileOnPosition(x - (50 * multiplayer), y);
+            }
+            case RIGHT -> {
+                return level.getTileOnPosition(x + (50 * multiplayer), y);
+            }
+            default -> {
+                return null;
+            }
         }
-        return tile;
     }
 
     @Override

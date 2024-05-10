@@ -20,7 +20,7 @@ public class MainPanel extends JPanel implements Runnable{
         setLayout(null);
 
         setVisible(true);
-        addKeyListener(new KeyHandler(this));
+        //addKeyListener(new KeyHandler());
 
        add(gamePanel);
 

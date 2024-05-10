@@ -99,11 +99,7 @@ public class Level {
         }
         //boxes
         for (Box box: boxes) {
-            if (box.isCorrectPosition()){
-                g2.drawImage(box.getWinnerImage(),box.getPosX(), box.getPosY(),50,50,null);
-            }else {
-                g2.drawImage(box.getImage(),box.getPosX(), box.getPosY(),50,50,null);
-            }
+            g2.drawImage(box.getImage(), box.getPosX(), box.getPosY(), 50, 50, null);
         }
     }
 

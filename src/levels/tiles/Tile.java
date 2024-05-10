@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
 
-    private BufferedImage image;
-    private TileType tileType;
+    private final BufferedImage image;
+    private final TileType tileType;
 
     public Tile(BufferedImage image, TileType tileType) {
         this.image = image;
