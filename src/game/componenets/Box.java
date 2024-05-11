@@ -1,4 +1,6 @@
-package game;
+package game.componenets;
+
+import game.Direction;
 
 import java.awt.image.BufferedImage;
 

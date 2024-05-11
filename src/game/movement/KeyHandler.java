@@ -1,9 +1,7 @@
 package game.movement;
 
 import game.Direction;
-import game.GamePanel;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

@@ -1,6 +1,6 @@
 package levels;
 
-import game.Box;
+import game.componenets.Box;
 import levels.tiles.Tile;
 
 import javax.imageio.ImageIO;
@@ -39,7 +39,7 @@ public class Level {
 
     public void loadTiles(String path){
         try {
-            InputStream is = getClass().getResourceAsStream("/levels/level_one.txt");
+            InputStream is = getClass().getResourceAsStream(path);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int boxCount = 1;
@@ -86,6 +86,15 @@ public class Level {
         return tiles[x/50][y/50];
     }
 
+    public boolean checkWin(){
+        for (Box b: boxes) {
+            if (!b.isCorrectPosition()){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public ArrayList<Box> getBoxes() {
         return boxes;
     }
@@ -103,4 +112,7 @@ public class Level {
         }
     }
 
+    public int getLevelNumber() {
+        return levelNumber;
+    }
 }

@@ -1,6 +1,6 @@
 package game.movement;
 
-import game.Box;
+import game.componenets.Box;
 import game.Direction;
 
 public class Movement {

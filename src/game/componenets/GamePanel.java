@@ -1,11 +1,15 @@
-package game;
+package game.componenets;
 
+import game.Direction;
+import game.GameState;
 import game.movement.KeyHandler;
 import game.movement.Movement;
 import game.movement.MovementStack;
 import levels.Level;
+import levels.LevelManager;
 import levels.TileType;
 import levels.tiles.Tile;
+import game.GameMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,22 +25,37 @@ public class GamePanel extends JPanel {
 
     private int tileSize;
 
+    private LevelManager levelManager = new LevelManager();
     private Level level;
+    private GameMode gameMode;
+    private GameState gameState;
 
-    public GamePanel(int width, int height, int tileSize, Level level) {
-        setBounds(50, 50, width, height);
-        setBackground(Color.GRAY);
-        addKeyListener(keyHandler);
-        setFocusable(true);
+    public GamePanel(int width, int height, int tileSize, GameMode mode) {
 
         this.player = new Player(width, height);
 
         this.width = width;
         this.height = height;
         this.tileSize = tileSize;
+        this.gameMode = mode;
 
-        this.level = level;
+       initialize();
+    }
 
+    private void initialize(){
+        setBounds(50, 50, width, height);
+        setBackground(Color.GRAY);
+        addKeyListener(keyHandler);
+        setFocusable(true);
+
+        if (gameMode == GameMode.NORMAL){
+            levelManager.setCurrentLevel(1);
+            gameState = GameState.PLAYING;
+        }else {
+            //TODO let player choose his level
+        }
+
+        level = levelManager.getCurrentLevel();
     }
 
     Direction direction = Direction.NONE;
@@ -55,8 +74,13 @@ public class GamePanel extends JPanel {
 
         //System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
 
+        if (direction == Direction.NONE && level.checkWin()){
+            System.out.println("WINNER");
+
+            return;
+        }
+
         if (keyHandler.reset) {
-            //TODO set back the box color
             if (!stack.isEmpty()) {
                 System.out.println("RESET");
                 Movement m = stack.pop();
@@ -66,6 +90,9 @@ public class GamePanel extends JPanel {
 
                 m.getBox().setPosX(m.getBoxX());
                 m.getBox().setPosY(m.getBoxY());
+
+                m.getBox().setCorrectPosition(level.getTileOnPosition(m.getBoxX(), m.getBoxY()).getTileType() == TileType.BOX_DESTINATION);
+
                 keyHandler.reset = false;
                 return;
             } else {
@@ -73,6 +100,7 @@ public class GamePanel extends JPanel {
                 keyHandler.reset = false;
             }
         }
+
         if (playerX % 50 != 0 || playerY % 50 != 0) { // if player is still moving
 
             int remaining = calculateRemaining(lastDirection, playerX, playerY);
@@ -101,6 +129,7 @@ public class GamePanel extends JPanel {
 
                             if (boxMoved == 0) {
                                 stack.add(new Movement(box, box.getPosX(), box.getPosY(), direction));
+                                //System.out.println(stack);
                             }
 
                             box.move(direction, speed);

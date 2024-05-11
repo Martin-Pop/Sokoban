@@ -1,4 +1,6 @@
-package game;
+package game.componenets;
+
+import game.Direction;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,7 +23,7 @@ public class Player {
         this.posY = roomHeight/2;
     }
 
-    public void move(Direction d,int speed){
+    public void move(Direction d, int speed){
         switch (d){
             case UP -> updateY(-speed);
             case DOWN ->  updateY(speed);

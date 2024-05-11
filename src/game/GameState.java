@@ -1,5 +1,8 @@
+package game;
+
 public enum GameState {
     PLAYING,
     MAIN_MENU,
-    LEVEL_CHOICE
+    LEVEL_CHOICE,
+    WINNER
 }

@@ -1,7 +1,7 @@
 package frame;
 
-import game.GamePanel;
-import game.movement.KeyHandler;
+import game.GameMode;
+import game.componenets.GamePanel;
 import levels.Level;
 
 import javax.swing.*;
@@ -11,7 +11,9 @@ public class MainPanel extends JPanel implements Runnable{
 
 
     Thread gameThread = new Thread(this);
-    GamePanel gamePanel = new GamePanel(600,500,50,new Level(1,5,"/levels/level_one.txt"));
+    GamePanel gamePanel = new GamePanel(600,500,50, GameMode.NORMAL);
+
+    JLabel label = new JLabel();
 
     public MainPanel(){
 
@@ -22,9 +24,9 @@ public class MainPanel extends JPanel implements Runnable{
         setVisible(true);
         //addKeyListener(new KeyHandler());
 
-       add(gamePanel);
+       //add(gamePanel);
 
-       gameThread.start();
+       //gameThread.start();
     }
 
     @Override
