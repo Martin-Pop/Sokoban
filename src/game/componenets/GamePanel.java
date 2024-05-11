@@ -45,12 +45,13 @@ public class GamePanel extends JPanel {
     private void initialize(){
         setBounds(50, 50, width, height);
         setBackground(Color.GRAY);
-        addKeyListener(keyHandler);
         setFocusable(true);
+
+        addKeyListener(keyHandler);
 
         if (gameMode == GameMode.NORMAL){
             levelManager.setCurrentLevel(1);
-            gameState = GameState.PLAYING;
+            //gameState = GameState.PLAYING;
         }else {
             //TODO let player choose his level
         }
@@ -68,7 +69,6 @@ public class GamePanel extends JPanel {
     Box box; //current box
 
     public void updateGame() {
-
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 

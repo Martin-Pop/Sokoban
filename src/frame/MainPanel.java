@@ -2,6 +2,7 @@ package frame;
 
 import game.GameMode;
 import game.componenets.GamePanel;
+import game.componenets.MainMenuPanel;
 import levels.Level;
 
 import javax.swing.*;
@@ -11,22 +12,40 @@ public class MainPanel extends JPanel implements Runnable{
 
 
     Thread gameThread = new Thread(this);
-    GamePanel gamePanel = new GamePanel(600,500,50, GameMode.NORMAL);
+    GamePanel gamePanel;
 
-    JLabel label = new JLabel();
+    MainMenuPanel mainMenuPanel = new MainMenuPanel();
+    GameMode gameMode;
 
     public MainPanel(){
+        initialize();
+    }
 
+    public void initialize(){
         setBounds(0,0,900,750);
         setBackground(Color.DARK_GRAY);
         setLayout(null);
 
+        add(mainMenuPanel);
+        mainMenuPanel.setVisible(true);
+
         setVisible(true);
-        //addKeyListener(new KeyHandler());
+    }
 
-       //add(gamePanel);
+    public void startGame(){
 
-       //gameThread.start();
+         while (mainMenuPanel.getGameMode() == null){
+            gameMode = mainMenuPanel.getGameMode();
+            System.out.println(gameMode);
+        }
+        mainMenuPanel.setVisible(false);
+        remove(mainMenuPanel);
+
+        gamePanel = new GamePanel(600,500,50, GameMode.NORMAL);
+        add(gamePanel);
+
+        gamePanel.requestFocus(); // very important
+        gameThread.start();
     }
 
     @Override
