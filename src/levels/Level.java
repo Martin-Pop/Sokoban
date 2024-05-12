@@ -14,6 +14,9 @@ public class Level {
     private int levelNumber;
     private int timeAmount;
 
+    private int playerSpawnX;
+    private int playerSpawnY;
+
     private HashMap<String, Tile> tileMap = new HashMap<>();
 
     private Tile[][] tiles = new Tile[12][10];
@@ -60,6 +63,11 @@ public class Level {
                                     ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
                             ));
                             boxCount++;
+                        }
+                        case "4" -> {
+                            tiles[i][column] = tileMap.get("floor");
+                            playerSpawnX = i*50;
+                            playerSpawnY = column*50;
                         }
                     }
                 }
@@ -114,5 +122,13 @@ public class Level {
 
     public int getLevelNumber() {
         return levelNumber;
+    }
+
+    public int getPlayerSpawnX() {
+        return playerSpawnX;
+    }
+
+    public int getPlayerSpawnY() {
+        return playerSpawnY;
     }
 }

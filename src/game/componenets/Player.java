@@ -12,15 +12,9 @@ public class Player {
     private int posX;
     private int posY;
 
-    private int roomWidth;
-    private int roomHeight;
-
-    public Player(int roomWidth, int roomHeight) {
-        this.roomWidth = roomWidth;
-        this.roomHeight = roomHeight;
-
-        this.posX = roomWidth/2;
-        this.posY = roomHeight/2;
+    public Player(int posX, int posY) {
+        this.posX = posX;
+        this.posY = posY;
     }
 
     public void move(Direction d, int speed){

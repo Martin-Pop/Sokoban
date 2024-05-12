@@ -32,8 +32,6 @@ public class GamePanel extends JPanel {
 
     public GamePanel(int width, int height, int tileSize, GameMode mode) {
 
-        this.player = new Player(width, height);
-
         this.width = width;
         this.height = height;
         this.tileSize = tileSize;
@@ -56,7 +54,13 @@ public class GamePanel extends JPanel {
             //TODO let player choose his level
         }
 
-        level = levelManager.getCurrentLevel();
+        restartLevel();
+    }
+
+    private void restartLevel(){
+        System.out.println("RESTARTING");
+        this.level = levelManager.getCurrentLevel();
+        this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
     }
 
     Direction direction = Direction.NONE;
@@ -76,7 +80,8 @@ public class GamePanel extends JPanel {
 
         if (direction == Direction.NONE && level.checkWin()){
             System.out.println("WINNER");
-
+            levelManager.nextLevel();
+            restartLevel();
             return;
         }
 

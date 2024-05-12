@@ -12,6 +12,7 @@ public class LevelManager {
 
     private void initializeLevels(){
         levels.add(new Level(1,1,"/levels/level_one.txt"));
+        levels.add(new Level(2,1,"/levels/level_two.txt"));
     }
 
     public void nextLevel(){

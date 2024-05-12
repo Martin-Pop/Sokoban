@@ -36,7 +36,7 @@ public class MainPanel extends JPanel implements Runnable{
 
          while (mainMenuPanel.getGameMode() == null){
             gameMode = mainMenuPanel.getGameMode();
-            System.out.println(gameMode);
+             System.out.println(gameMode);
         }
         mainMenuPanel.setVisible(false);
         remove(mainMenuPanel);
