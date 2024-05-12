@@ -32,7 +32,7 @@ public class MainMenuPanel extends JPanel {
         headLabel.setForeground(new Color(119, 176, 170));
         headLabel.setBackground(new Color(19, 93, 102));
         headLabel.setOpaque(true);
-        headLabel.setFont(new Font("Monospaced", Font.PLAIN, 50));
+        headLabel.setFont(new Font("Ariel", Font.PLAIN, 50));
 
         option1Button.setBounds(100,350,200,100);
         option1Button.setHorizontalAlignment(SwingConstants.CENTER);
@@ -41,7 +41,7 @@ public class MainMenuPanel extends JPanel {
         option1Button.setBackground(new Color(19, 93, 102));
         option1Button.setFocusable(false);
         option1Button.setBorder(null);
-        option1Button.setFont(new Font("Monospaced", Font.PLAIN, 25));
+        option1Button.setFont(new Font("Ariel", Font.PLAIN, 25));
         option1Button.addActionListener(e -> option = GameMode.NORMAL);
 
         option2Button.setBounds(600,350,200,100);
@@ -51,7 +51,7 @@ public class MainMenuPanel extends JPanel {
         option2Button.setBackground(new Color(19, 93, 102));
         option2Button.setFocusable(false);
         option2Button.setBorder(null);
-        option2Button.setFont(new Font("Monospaced", Font.PLAIN, 25));
+        option2Button.setFont(new Font("Ariel", Font.PLAIN, 25));
         option2Button.addActionListener(e -> option = GameMode.FREE);
 
         option1Label.setBounds(100,450,200,100);

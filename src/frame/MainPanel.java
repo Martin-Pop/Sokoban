@@ -3,10 +3,12 @@ package frame;
 import game.GameMode;
 import game.componenets.GamePanel;
 import game.componenets.MainMenuPanel;
+import game.componenets.Timer;
 import levels.Level;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Time;
 
 public class MainPanel extends JPanel implements Runnable{
 
@@ -29,6 +31,7 @@ public class MainPanel extends JPanel implements Runnable{
         add(mainMenuPanel);
         mainMenuPanel.setVisible(true);
 
+
         setVisible(true);
     }
 
@@ -39,10 +42,14 @@ public class MainPanel extends JPanel implements Runnable{
              System.out.println(gameMode);
         }
         mainMenuPanel.setVisible(false);
-        remove(mainMenuPanel);
+        //remove(mainMenuPanel);
 
-        gamePanel = new GamePanel(600,500,50, GameMode.NORMAL);
+        Timer timer = new Timer();
+        add(timer);
+
+        gamePanel = new GamePanel(600,500,50, GameMode.NORMAL, timer);
         add(gamePanel);
+
 
         gamePanel.requestFocus(); // very important
         gameThread.start();

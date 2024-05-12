@@ -30,12 +30,16 @@ public class GamePanel extends JPanel {
     private GameMode gameMode;
     private GameState gameState;
 
-    public GamePanel(int width, int height, int tileSize, GameMode mode) {
+    private Timer timer;
+
+    public GamePanel(int width, int height, int tileSize, GameMode mode, Timer timer) {
 
         this.width = width;
         this.height = height;
         this.tileSize = tileSize;
         this.gameMode = mode;
+
+        this.timer = timer;
 
        initialize();
     }
@@ -61,6 +65,8 @@ public class GamePanel extends JPanel {
         System.out.println("RESTARTING");
         this.level = levelManager.getCurrentLevel();
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
+
+        timer.setNewTime(level.getTimeAmount());
     }
 
     Direction direction = Direction.NONE;
@@ -77,6 +83,11 @@ public class GamePanel extends JPanel {
         int playerY = player.getPosY();
 
         //System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
+
+        if (timer.runOutOfTime()){
+            System.out.println("RUN OUT OF TIME");
+            return;
+        }
 
         if (direction == Direction.NONE && level.checkWin()){
             System.out.println("WINNER");

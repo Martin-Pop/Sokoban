@@ -131,4 +131,8 @@ public class Level {
     public int getPlayerSpawnY() {
         return playerSpawnY;
     }
+
+    public int getTimeAmount() {
+        return timeAmount;
+    }
 }
