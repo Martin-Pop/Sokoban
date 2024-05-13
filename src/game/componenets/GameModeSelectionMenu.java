@@ -1,12 +1,11 @@
 package game.componenets;
 
 import game.GameMode;
-import game.movement.KeyHandler;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainMenuPanel extends JPanel {
+public class GameModeSelectionMenu extends JPanel {
 
     private JButton option1Button = new JButton();
     private JButton option2Button = new JButton();
@@ -17,7 +16,7 @@ public class MainMenuPanel extends JPanel {
 
     private GameMode option;
 
-    public MainMenuPanel() {
+    public GameModeSelectionMenu() {
         initialize();
     }
 
