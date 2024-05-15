@@ -17,7 +17,8 @@ public class MainFrame extends JFrame {
 
         pack();
         setVisible(true);
-        mainPanel.startGame();
+        //mainPanel.startGame();
+        System.out.println("BACK");
     }
 
 }

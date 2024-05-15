@@ -66,9 +66,15 @@ public class GameModeSelectionMenu extends JPanel {
         add(option1Label);
         add(option2Label);
         add(headLabel);
+
+        setVisible(false);
     }
 
     public GameMode getGameMode(){
         return option;
+    }
+
+    public void resetOption(){
+        this.option = null;
     }
 }

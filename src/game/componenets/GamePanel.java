@@ -28,16 +28,16 @@ public class GamePanel extends JPanel {
     private LevelManager levelManager = new LevelManager();
     private Level level;
     private GameMode gameMode;
-    private GameState gameState;
+    private GameStateManager gameStateManager;
 
     private Timer timer;
 
-    public GamePanel(int width, int height, int tileSize, GameMode mode, Timer timer) {
+    public GamePanel(int width, int height, int tileSize, Timer timer, GameStateManager gameStateManager) {
 
         this.width = width;
         this.height = height;
         this.tileSize = tileSize;
-        this.gameMode = mode;
+        this.gameStateManager = gameStateManager;
 
         this.timer = timer;
 
@@ -50,19 +50,22 @@ public class GamePanel extends JPanel {
         setFocusable(true);
 
         addKeyListener(keyHandler);
+    }
+
+    private void setUpLevel(){
+        System.out.println("RESTARTING LEVEL");
 
         if (gameMode == GameMode.NORMAL){
-            levelManager.setCurrentLevel(1);
-            //gameState = GameState.PLAYING;
+            if (gameStateManager.getCurrentState() == GameState.WINNER){
+                levelManager.nextLevel();
+            }else {
+                levelManager.setCurrentLevel(1);
+            }
+            gameStateManager.setCurrentState(GameState.PLAYING);
         }else {
             //TODO let player choose his level
         }
 
-        restartLevel();
-    }
-
-    private void restartLevel(){
-        System.out.println("RESTARTING");
         this.level = levelManager.getCurrentLevel();
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
 
@@ -92,8 +95,8 @@ public class GamePanel extends JPanel {
 
         if (direction == Direction.NONE && level.checkWin()){
             System.out.println("WINNER");
-            levelManager.nextLevel();
-            restartLevel();
+            gameStateManager.setCurrentState(GameState.WINNER);
+            setUpLevel();
             return;
         }
 
@@ -237,13 +240,17 @@ public class GamePanel extends JPanel {
         }
     }
 
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+        setUpLevel();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        level.drawLevel(g2);
 
+        level.drawLevel(g2);
         player.drawPlayer(g2);
     }
 }

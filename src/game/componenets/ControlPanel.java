@@ -32,7 +32,7 @@ public class ControlPanel extends JPanel {
         resetButton.addActionListener(e -> gameStateManager.setCurrentState(GameState.RESET_LEVEL));
 
         add(resetButton);
-        setVisible(true);
+        setVisible(false);
     }
 
 }

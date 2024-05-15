@@ -12,12 +12,16 @@ public class MainPanel extends JPanel implements Runnable{
 
 
     Thread gameThread = new Thread(this);
-    GamePanel gamePanel;
-    GameStateManager gameStateManager = new GameStateManager();
-
-    GameModeSelectionMenu gameModeSelectionMenu = new GameModeSelectionMenu();
-    Timer gameTimer;
+    GameStateManager gameStateManager;
     GameMode gameMode;
+
+    GameModeSelectionMenu gameModeSelectionMenu;
+    MainMenu mainMenu;
+    Timer gameTimer;
+    GamePanel gamePanel;
+    ControlPanel controlPanel;
+
+    FrameManager frameManager;
 
     public MainPanel(){
         initialize();
@@ -28,35 +32,53 @@ public class MainPanel extends JPanel implements Runnable{
         setBackground(Color.DARK_GRAY);
         setLayout(null);
 
-        add(gameModeSelectionMenu);
-        gameModeSelectionMenu.setVisible(true);
-
+        gameModeSelectionMenu = new GameModeSelectionMenu();
+        gameStateManager = new GameStateManager();
+        mainMenu = new MainMenu(gameStateManager);
+        controlPanel = new ControlPanel(gameStateManager);
         gameTimer = new Timer();
+        gamePanel = new GamePanel(600,500,50, gameTimer, gameStateManager);
+
+        frameManager = new FrameManager(mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel);
+
+        add(gameModeSelectionMenu);
+        add(mainMenu);
+        add(controlPanel);
         add(gameTimer);
-        add(new ControlPanel(gameStateManager));
+        add(gamePanel);
+        //gameModeSelectionMenu.setVisible(true);
 
         //add(new MainMenu());
 
         setVisible(true);
+
+        startGame();
     }
 
     public void startGame(){
         gameStateManager.setCurrentState(GameState.MAIN_MENU);
-        //TODO frame manager?
 
-         while (gameModeSelectionMenu.getGameMode() == null){
-            gameMode = gameModeSelectionMenu.getGameMode();
-             System.out.println(gameMode);
-        }
-        gameModeSelectionMenu.setVisible(false);
+        gameThread.start();
+
+        //waitForGameModeSelection();
+
+        //gameModeSelectionMenu.setVisible(false);
         //remove(mainMenuPanel);
 
-        gamePanel = new GamePanel(600,500,50, GameMode.NORMAL, gameTimer);
-        add(gamePanel);
+        //gamePanel = new GamePanel(600,500,50, gameTimer);
 
 
-        gamePanel.requestFocus(); // very important
-        gameThread.start();
+
+        //gamePanel.requestFocus(); // very important
+    }
+
+    private void waitForGameModeSelection(){
+        gameModeSelectionMenu.resetOption();
+        while (gameModeSelectionMenu.getGameMode() == null){
+            gameMode = gameModeSelectionMenu.getGameMode();
+            System.out.println(gameMode);
+            System.out.println("waitinmg");
+        }
     }
 
     @Override
@@ -64,9 +86,24 @@ public class MainPanel extends JPanel implements Runnable{
         double runInterval = 1000000000/60;
         double nextInterval = System.nanoTime() + runInterval;
 
-        while (gameThread != null){
+        System.out.println("state:" + gameStateManager.getCurrentState());
 
-            gamePanel.updateGame();
+        while (gameThread != null){
+            GameState state = gameStateManager.getCurrentState();
+            System.out.println(gameModeSelectionMenu.getGameMode());
+            frameManager.update(state);
+            switch (state){
+                case GAME_MODE_CHOICE -> {
+                    gameMode = gameModeSelectionMenu.getGameMode();
+                    if (gameMode != null){
+                        gamePanel.setGameMode(gameMode);
+                        //gameStateManager.setCurrentState(GameState.PLAYING);
+                    }
+                }
+                case PLAYING -> {
+                    gamePanel.updateGame();
+                }
+            }
 
             try {
                 double remainingTime = nextInterval - System.nanoTime();

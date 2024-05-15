@@ -45,7 +45,7 @@ public class Timer extends JPanel implements Runnable{
 
         add(label);
         add(timeLabel);
-        setVisible(true);
+        setVisible(false);
     }
 
     public boolean runOutOfTime(){
