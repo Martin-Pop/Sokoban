@@ -32,7 +32,7 @@ public class Timer extends JPanel implements Runnable{
         label.setForeground(new Color(227, 254, 247));
         label.setBackground(new Color(19, 93, 102));
         label.setOpaque(true);
-        label.setVisible(true);
+        //label.setVisible(true);
         //label.setFont(new Font("Monospaced", Font.PLAIN, 15));
 
         timeLabel = new JLabel("0");
@@ -41,7 +41,7 @@ public class Timer extends JPanel implements Runnable{
         timeLabel.setForeground(new Color(227, 254, 247));
         timeLabel.setBackground(new Color(19, 93, 102));
         timeLabel.setOpaque(true);
-        timeLabel.setVisible(true);
+        //timeLabel.setVisible(true);
 
         add(label);
         add(timeLabel);

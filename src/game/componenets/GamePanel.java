@@ -79,6 +79,7 @@ public class GamePanel extends JPanel {
     Box box; //current box
 
     public void updateGame() {
+        //TODO update game based of game state
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 

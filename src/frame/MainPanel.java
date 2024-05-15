@@ -1,22 +1,22 @@
 package frame;
 
 import game.GameMode;
-import game.componenets.GamePanel;
-import game.componenets.MainMenuPanel;
+import game.GameState;
+import game.componenets.*;
 import game.componenets.Timer;
-import levels.Level;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Time;
 
 public class MainPanel extends JPanel implements Runnable{
 
 
     Thread gameThread = new Thread(this);
     GamePanel gamePanel;
+    GameStateManager gameStateManager = new GameStateManager();
 
-    MainMenuPanel mainMenuPanel = new MainMenuPanel();
+    GameModeSelectionMenu gameModeSelectionMenu = new GameModeSelectionMenu();
+    Timer gameTimer;
     GameMode gameMode;
 
     public MainPanel(){
@@ -28,26 +28,30 @@ public class MainPanel extends JPanel implements Runnable{
         setBackground(Color.DARK_GRAY);
         setLayout(null);
 
-        add(mainMenuPanel);
-        mainMenuPanel.setVisible(true);
+        add(gameModeSelectionMenu);
+        gameModeSelectionMenu.setVisible(true);
 
+        gameTimer = new Timer();
+        add(gameTimer);
+        add(new ControlPanel(gameStateManager));
+
+        //add(new MainMenu());
 
         setVisible(true);
     }
 
     public void startGame(){
+        gameStateManager.setCurrentState(GameState.MAIN_MENU);
+        //TODO frame manager?
 
-         while (mainMenuPanel.getGameMode() == null){
-            gameMode = mainMenuPanel.getGameMode();
+         while (gameModeSelectionMenu.getGameMode() == null){
+            gameMode = gameModeSelectionMenu.getGameMode();
              System.out.println(gameMode);
         }
-        mainMenuPanel.setVisible(false);
+        gameModeSelectionMenu.setVisible(false);
         //remove(mainMenuPanel);
 
-        Timer timer = new Timer();
-        add(timer);
-
-        gamePanel = new GamePanel(600,500,50, GameMode.NORMAL, timer);
+        gamePanel = new GamePanel(600,500,50, GameMode.NORMAL, gameTimer);
         add(gamePanel);
 
 

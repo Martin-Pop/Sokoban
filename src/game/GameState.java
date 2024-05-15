@@ -4,5 +4,6 @@ public enum GameState {
     PLAYING,
     MAIN_MENU,
     LEVEL_CHOICE,
-    WINNER
+    WINNER,
+    RESET_LEVEL
 }
