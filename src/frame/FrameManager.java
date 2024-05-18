@@ -10,16 +10,18 @@ public class FrameManager {
     private GamePanel gamePanel;
     private Timer timer;
     private ControlPanel controlPanel;
+    private ReturnToMenuPanel returnToMenuPanel;
     private InformationPanel informationPanel;
 
     private GameState lastGameState;
 
-    public FrameManager(MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, GamePanel gamePanel, Timer timer, ControlPanel controlPanel, InformationPanel informationPanel) {
+    public FrameManager(MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, GamePanel gamePanel, Timer timer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
         this.mainMenu = mainMenu;
         this.gameModeSelectionMenu = gameModeSelectionMenu;
         this.gamePanel = gamePanel;
         this.timer = timer;
         this.controlPanel = controlPanel;
+        this.returnToMenuPanel = returnToMenuPanel;
         this.informationPanel = informationPanel;
     }
 
@@ -33,6 +35,7 @@ public class FrameManager {
                     this.timer.setVisible(true);
                     this.controlPanel.setVisible(true);
                     this.informationPanel.setVisible(true);
+                    this.returnToMenuPanel.setVisible(true);
                     this.gamePanel.setVisible(true);
                     this.gamePanel.requestFocus();
                 }
@@ -45,6 +48,7 @@ public class FrameManager {
                     this.timer.setVisible(false);
                     this.controlPanel.setVisible(false);
                     this.informationPanel.setVisible(false);
+                    this.returnToMenuPanel.setVisible(false);
                     this.mainMenu.setVisible(true);
                     this.mainMenu.requestFocus();
                 }
@@ -57,6 +61,7 @@ public class FrameManager {
                     this.gamePanel.setVisible(false);
                     this.controlPanel.setVisible(false);
                     this.informationPanel.setVisible(false);
+                    this.returnToMenuPanel.setVisible(false);
                     this.timer.setVisible(false);
                     this.gameModeSelectionMenu.setVisible(true);
                     this.gameModeSelectionMenu.requestFocus();

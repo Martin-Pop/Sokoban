@@ -6,5 +6,7 @@ public enum GameState {
     LEVEL_CHOICE,
     WINNER,
     RESET_LEVEL,
-    GAME_MODE_CHOICE
+    GAME_MODE_CHOICE,
+    RUN_OUT_OF_TIME,
+    RETURN_TO_MENU
 }

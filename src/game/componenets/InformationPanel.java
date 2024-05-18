@@ -6,7 +6,8 @@ import java.awt.*;
 public class InformationPanel extends JPanel {
     private GameStateManager gameStateManager;
     private JLabel informationLabel;
-    private JLabel levelLabel;
+
+    private int levelNumber;
 
     public InformationPanel(GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
@@ -19,7 +20,7 @@ public class InformationPanel extends JPanel {
         setLayout(null);
 
         informationLabel = new JLabel();
-        informationLabel.setBounds(0, 0, 50, 50);
+        informationLabel.setBounds(0, 0, 300, 50);
         informationLabel.setHorizontalAlignment(SwingConstants.CENTER);
         informationLabel.setText("INFO:");
         //informationLabel.setFont(new Font("Ariel", Font.PLAIN, 25));
@@ -28,20 +29,34 @@ public class InformationPanel extends JPanel {
         informationLabel.setFocusable(false);
         informationLabel.setOpaque(true);
         informationLabel.setBorder(null);
-        //informationLabel.setVisible(true);
-
-        levelLabel = new JLabel();
-        levelLabel.setBounds(50, 0, 250, 50);
-        levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        levelLabel.setText("0");
-        levelLabel.setForeground(new Color(227, 254, 247));
-        levelLabel.setBackground(new Color(19, 93, 102));
-        levelLabel.setFocusable(false);
-        levelLabel.setOpaque(true);
-        levelLabel.setBorder(null);
 
         add(informationLabel);
-        add(levelLabel);
+        //add(levelLabel);
         setVisible(false);
     }
+
+    public void setLevelNumber(int levelNumber) {
+        this.levelNumber = levelNumber;
+        updateLabel();
+    }
+
+    public void updateLabel(){
+        switch (gameStateManager.getCurrentState()){
+            case PLAYING -> {
+                informationLabel.setText("Playing level number: " + levelNumber);
+                informationLabel.setForeground(new Color(227, 254, 247));
+            }
+            case WINNER -> {
+                informationLabel.setText("You won");
+                informationLabel.setForeground(new Color(123, 239, 15));
+            }
+            case RUN_OUT_OF_TIME -> {
+                informationLabel.setText("You have run out of time");
+                informationLabel.setForeground(new Color(239, 15, 15));
+            }
+        }
+
+    }
+
+
 }

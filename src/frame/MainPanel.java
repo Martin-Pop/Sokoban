@@ -20,6 +20,7 @@ public class MainPanel extends JPanel implements Runnable{
     Timer gameTimer;
     GamePanel gamePanel;
     ControlPanel controlPanel;
+    ReturnToMenuPanel returnToMenuPanel;
     InformationPanel informationPanel;
 
     FrameManager frameManager;
@@ -37,17 +38,19 @@ public class MainPanel extends JPanel implements Runnable{
         gameStateManager = new GameStateManager();
         mainMenu = new MainMenu(gameStateManager);
         controlPanel = new ControlPanel(gameStateManager);
+        returnToMenuPanel = new ReturnToMenuPanel(gameStateManager);
         informationPanel = new InformationPanel(gameStateManager);
         gameTimer = new Timer();
-        gamePanel = new GamePanel(600,500, gameTimer, gameStateManager);
+        gamePanel = new GamePanel(600,500, gameTimer, gameStateManager, informationPanel);
 
-        frameManager = new FrameManager(mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel);
+        frameManager = new FrameManager(mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
 
         add(gameModeSelectionMenu);
         add(mainMenu);
         add(controlPanel);
         add(gameTimer);
         add(informationPanel);
+        add(returnToMenuPanel);
         add(gamePanel);
         //gameModeSelectionMenu.setVisible(true);
 
@@ -93,7 +96,7 @@ public class MainPanel extends JPanel implements Runnable{
 
         while (gameThread != null){
             GameState state = gameStateManager.getCurrentState();
-            System.out.println(gameModeSelectionMenu.getGameMode());
+            //System.out.println(gameModeSelectionMenu.getGameMode());
             frameManager.update(state);
             switch (state){
                 case GAME_MODE_CHOICE -> {

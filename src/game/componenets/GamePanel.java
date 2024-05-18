@@ -27,16 +27,18 @@ public class GamePanel extends JPanel {
     private Level level;
     private GameMode gameMode;
     private GameStateManager gameStateManager;
+    private InformationPanel informationPanel;
 
     private Timer timer;
 
-    public GamePanel(int width, int height, Timer timer, GameStateManager gameStateManager) {
+    public GamePanel(int width, int height, Timer timer, GameStateManager gameStateManager, InformationPanel informationPanel) {
 
         this.width = width;
         this.height = height;
         this.gameStateManager = gameStateManager;
 
         this.timer = timer;
+        this.informationPanel = informationPanel;
 
        initialize();
     }
@@ -60,13 +62,16 @@ public class GamePanel extends JPanel {
             }
             gameStateManager.setCurrentState(GameState.PLAYING);
         }else {
+            return;
             //TODO let player choose his level
         }
 
         this.level = levelManager.getCurrentLevel();
+        System.out.println(level.getLevelNumber());
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
 
         timer.setNewTime(level.getTimeAmount());
+        informationPanel.setLevelNumber(level.getLevelNumber());
     }
 
     public void resetLevel(){
@@ -91,6 +96,8 @@ public class GamePanel extends JPanel {
 
         if (timer.runOutOfTime()){
             System.out.println("RUN OUT OF TIME");
+            gameStateManager.setCurrentState(GameState.RUN_OUT_OF_TIME);
+            informationPanel.updateLabel();
             return;
         }
 
