@@ -20,6 +20,7 @@ public class MainPanel extends JPanel implements Runnable{
     Timer gameTimer;
     GamePanel gamePanel;
     ControlPanel controlPanel;
+    InformationPanel informationPanel;
 
     FrameManager frameManager;
 
@@ -29,22 +30,24 @@ public class MainPanel extends JPanel implements Runnable{
 
     public void initialize(){
         setBounds(0,0,900,750);
-        setBackground(Color.DARK_GRAY);
+        setBackground(new Color(0, 60, 67));
         setLayout(null);
 
         gameModeSelectionMenu = new GameModeSelectionMenu();
         gameStateManager = new GameStateManager();
         mainMenu = new MainMenu(gameStateManager);
         controlPanel = new ControlPanel(gameStateManager);
+        informationPanel = new InformationPanel(gameStateManager);
         gameTimer = new Timer();
-        gamePanel = new GamePanel(600,500,50, gameTimer, gameStateManager);
+        gamePanel = new GamePanel(600,500, gameTimer, gameStateManager);
 
-        frameManager = new FrameManager(mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel);
+        frameManager = new FrameManager(mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel);
 
         add(gameModeSelectionMenu);
         add(mainMenu);
         add(controlPanel);
         add(gameTimer);
+        add(informationPanel);
         add(gamePanel);
         //gameModeSelectionMenu.setVisible(true);
 
@@ -99,6 +102,9 @@ public class MainPanel extends JPanel implements Runnable{
                         gamePanel.setGameMode(gameMode);
                         //gameStateManager.setCurrentState(GameState.PLAYING);
                     }
+                }
+                case RESET_LEVEL -> {
+                    gamePanel.resetLevel();
                 }
                 case PLAYING -> {
                     gamePanel.updateGame();

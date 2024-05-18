@@ -1,5 +1,6 @@
 package levels;
 
+import game.Direction;
 import game.componenets.Box;
 import levels.tiles.Tile;
 
@@ -11,8 +12,8 @@ import java.util.HashMap;
 
 public class Level {
 
-    private int levelNumber;
-    private int timeAmount;
+    private final int levelNumber;
+    private final int timeAmount;
 
     private int playerSpawnX;
     private int playerSpawnY;
@@ -80,6 +81,12 @@ public class Level {
         }
     }
 
+    public void resetBoxes(){
+        for (Box box: boxes) {
+            box.resetPosition();
+        }
+    }
+
     public Box checkBoxOnPosition(int x, int y){
         Box b = null;
         for (Box box : boxes){
@@ -103,10 +110,6 @@ public class Level {
         return true;
     }
 
-    public ArrayList<Box> getBoxes() {
-        return boxes;
-    }
-
     public void drawLevel(Graphics2D g2){
         //floor
         for (int i = 0; i < tiles.length; i++) {
@@ -117,6 +120,54 @@ public class Level {
         //boxes
         for (Box box: boxes) {
             g2.drawImage(box.getImage(), box.getPosX(), box.getPosY(), 50, 50, null);
+        }
+    }
+
+    public Box getBox(Direction d, int x, int y, Boolean checkSecondNextTile) {
+        int multiplayer = 1;
+        if (checkSecondNextTile) {
+            multiplayer = 2;
+        }
+        switch (d) {
+            case UP -> {
+                return checkBoxOnPosition(x, y - (50 * multiplayer));
+            }
+            case DOWN -> {
+                return checkBoxOnPosition(x, y + (50 * multiplayer));
+            }
+            case LEFT -> {
+                return checkBoxOnPosition(x - (50 * multiplayer), y);
+            }
+            case RIGHT -> {
+                return checkBoxOnPosition(x + (50 * multiplayer), y);
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
+    public Tile getNextTile(Direction d, int x, int y, Boolean checkSecondNextTile) {
+        int multiplayer = 1;
+        if (checkSecondNextTile) {
+            multiplayer = 2;
+        }
+        switch (d) {
+            case UP -> {
+                return getTileOnPosition(x, y - (50 * multiplayer));
+            }
+            case DOWN -> {
+                return getTileOnPosition(x, y + (50 * multiplayer));
+            }
+            case LEFT -> {
+                return getTileOnPosition(x - (50 * multiplayer), y);
+            }
+            case RIGHT -> {
+                return getTileOnPosition(x + (50 * multiplayer), y);
+            }
+            default -> {
+                return null;
+            }
         }
     }
 

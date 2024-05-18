@@ -9,6 +9,9 @@ public class Box {
     private int posX;
     private int posY;
 
+    private final int starterPositionX;
+    private final int starterPositionY;
+
     private boolean correctPosition = false;
 
     private int boxNumber;
@@ -21,6 +24,9 @@ public class Box {
         this.boxNumber = boxNumber;
         this.image = image;
         this.winnerImage = winnerImage;
+
+        this.starterPositionX = posX;
+        this.starterPositionY = posY;
     }
 
     public void setPosX(int posX) {
@@ -64,7 +70,10 @@ public class Box {
         }
     }
 
-    public BufferedImage getWinnerImage() {
-        return winnerImage;
+    public void resetPosition(){
+        this.posX = starterPositionX;
+        this.posY = starterPositionY;
+        setCorrectPosition(false);
     }
+
 }

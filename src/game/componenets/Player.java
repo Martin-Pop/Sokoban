@@ -12,9 +12,15 @@ public class Player {
     private int posX;
     private int posY;
 
+    private final int starterPositionX;
+    private final int starterPositionY;
+
     public Player(int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
+
+        this.starterPositionX = posX;
+        this.starterPositionY = posY;
     }
 
     public void move(Direction d, int speed){
@@ -24,6 +30,11 @@ public class Player {
             case LEFT -> updateX(-speed);
             case RIGHT -> updateX(speed);
         }
+    }
+
+    public void resetPlayer(){
+        this.posX = starterPositionX;
+        this.posY = starterPositionY;
     }
 
     public void updateX(int value){

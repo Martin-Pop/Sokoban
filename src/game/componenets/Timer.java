@@ -20,7 +20,6 @@ public class Timer extends JPanel implements Runnable{
 
     public void initialize(){
         setBounds(700, 50, 150, 100);
-        setBackground(Color.GRAY);
         setFocusable(true);
         setLayout(null);
 

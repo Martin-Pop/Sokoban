@@ -8,7 +8,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     public Direction direction = Direction.NONE;
-    public boolean reset;
+    public boolean revertMovement;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -22,7 +22,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_S -> direction = Direction.DOWN;
             case KeyEvent.VK_A -> direction = Direction.LEFT;
             case KeyEvent.VK_D -> direction = Direction.RIGHT;
-            case KeyEvent.VK_R -> reset = true;
+            case KeyEvent.VK_R -> revertMovement = true;
         }
     }
 

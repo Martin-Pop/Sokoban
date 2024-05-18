@@ -23,8 +23,6 @@ public class GamePanel extends JPanel {
     private int width;
     private int height;
 
-    private int tileSize;
-
     private LevelManager levelManager = new LevelManager();
     private Level level;
     private GameMode gameMode;
@@ -32,11 +30,10 @@ public class GamePanel extends JPanel {
 
     private Timer timer;
 
-    public GamePanel(int width, int height, int tileSize, Timer timer, GameStateManager gameStateManager) {
+    public GamePanel(int width, int height, Timer timer, GameStateManager gameStateManager) {
 
         this.width = width;
         this.height = height;
-        this.tileSize = tileSize;
         this.gameStateManager = gameStateManager;
 
         this.timer = timer;
@@ -72,14 +69,18 @@ public class GamePanel extends JPanel {
         timer.setNewTime(level.getTimeAmount());
     }
 
-    Direction direction = Direction.NONE;
-    Direction lastDirection;
+    public void resetLevel(){
+        this.level.resetBoxes();
+        this.player.resetPlayer();
+        gameStateManager.setCurrentState(GameState.PLAYING);
+    }
 
-    int boxMoved = 0; //if box was moved more tiles in one direction
-    int grid = 50;
-    int speed = 3; // speed is dynamic ()
+    private Direction direction = Direction.NONE;
+    private Direction lastDirection;
 
-    Box box; //current box
+    private int boxMoved = 0; //if box was moved more tiles in one direction
+    private int speed = 3; // movement speed
+    private Box box; //current box
 
     public void updateGame() {
         //TODO update game based of game state
@@ -100,9 +101,9 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        if (keyHandler.reset) {
+        if (keyHandler.revertMovement) {
             if (!stack.isEmpty()) {
-                System.out.println("RESET");
+
                 Movement m = stack.pop();
                 System.out.println(m);
                 player.setPosX(m.getPlayerX());
@@ -113,11 +114,11 @@ public class GamePanel extends JPanel {
 
                 m.getBox().setCorrectPosition(level.getTileOnPosition(m.getBoxX(), m.getBoxY()).getTileType() == TileType.BOX_DESTINATION);
 
-                keyHandler.reset = false;
+                keyHandler.revertMovement = false;
                 return;
             } else {
                 System.out.println("NOO");
-                keyHandler.reset = false;
+                keyHandler.revertMovement = false;
             }
         }
 
@@ -136,20 +137,19 @@ public class GamePanel extends JPanel {
 
             if (direction != Direction.NONE) { // if player is moving
 
-                Tile nextTile = getNextTile(direction, playerX, playerY, false);
+                Tile nextTile = level.getNextTile(direction, playerX, playerY, false);
 
                 if (nextTile.getTileType() != TileType.WALL) { // if next tile is not a wall
                     //System.out.println("getting box" + " " + playerX + " " + playerY);
-                    box = getBox(direction, playerX, playerY, false);
+                    box = level.getBox(direction, playerX, playerY, false);
 
                     if (box != null) { // if the next tile has a box
-                        Tile tileBehindBox = getNextTile(direction, playerX, playerY, true);
+                        Tile tileBehindBox = level.getNextTile(direction, playerX, playerY, true);
 
-                        if (tileBehindBox.getTileType() != TileType.WALL && getBox(direction, playerX, playerY, true) == null) { // if there is no wall or box behind the box
+                        if (tileBehindBox.getTileType() != TileType.WALL && level.getBox(direction, playerX, playerY, true) == null) { // if there is no wall or box behind the box
 
                             if (boxMoved == 0) {
                                 stack.add(new Movement(box, box.getPosX(), box.getPosY(), direction));
-                                //System.out.println(stack);
                             }
 
                             box.move(direction, speed);
@@ -188,54 +188,6 @@ public class GamePanel extends JPanel {
             }
             default -> {
                 return 0;
-            }
-        }
-    }
-
-    public Box getBox(Direction d, int x, int y, Boolean checkSecondNextTile) {
-        int multiplayer = 1;
-        if (checkSecondNextTile) {
-            multiplayer = 2;
-        }
-        switch (d) {
-            case UP -> {
-                return level.checkBoxOnPosition(x, y - (50 * multiplayer));
-            }
-            case DOWN -> {
-                return level.checkBoxOnPosition(x, y + (50 * multiplayer));
-            }
-            case LEFT -> {
-                return level.checkBoxOnPosition(x - (50 * multiplayer), y);
-            }
-            case RIGHT -> {
-                return level.checkBoxOnPosition(x + (50 * multiplayer), y);
-            }
-            default -> {
-                return null;
-            }
-        }
-    }
-
-    private Tile getNextTile(Direction d, int x, int y, Boolean checkSecondNextTile) {
-        int multiplayer = 1;
-        if (checkSecondNextTile) {
-            multiplayer = 2;
-        }
-        switch (d) {
-            case UP -> {
-                return level.getTileOnPosition(x, y - (50 * multiplayer));
-            }
-            case DOWN -> {
-                return level.getTileOnPosition(x, y + (50 * multiplayer));
-            }
-            case LEFT -> {
-                return level.getTileOnPosition(x - (50 * multiplayer), y);
-            }
-            case RIGHT -> {
-                return level.getTileOnPosition(x + (50 * multiplayer), y);
-            }
-            default -> {
-                return null;
             }
         }
     }
