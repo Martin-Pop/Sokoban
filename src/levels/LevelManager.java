@@ -3,7 +3,7 @@ package levels;
 import java.util.ArrayList;
 
 public class LevelManager {
-    private ArrayList<Level> levels = new ArrayList<>();
+    private final ArrayList<Level> levels = new ArrayList<>();
     private Level currentLevel;
 
     public LevelManager() {
