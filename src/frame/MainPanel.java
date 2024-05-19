@@ -35,7 +35,7 @@ public class MainPanel extends JPanel implements Runnable{
         setLayout(null);
 
         gameModeSelectionMenu = new GameModeSelectionMenu();
-        gameStateManager = new GameStateManager();
+        gameStateManager = new GameStateManager(this);
         mainMenu = new MainMenu(gameStateManager);
         controlPanel = new ControlPanel(gameStateManager);
         returnToMenuPanel = new ReturnToMenuPanel(gameStateManager);
@@ -43,7 +43,7 @@ public class MainPanel extends JPanel implements Runnable{
         gameTimer = new Timer();
         gamePanel = new GamePanel(600,500, gameTimer, gameStateManager, informationPanel);
 
-        frameManager = new FrameManager(mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
+        frameManager = new FrameManager(this,mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
 
         add(gameModeSelectionMenu);
         add(mainMenu);
@@ -64,45 +64,41 @@ public class MainPanel extends JPanel implements Runnable{
     public void startGame(){
         gameStateManager.setCurrentState(GameState.MAIN_MENU);
 
-        gameThread.start();
-
-        //waitForGameModeSelection();
-
-        //gameModeSelectionMenu.setVisible(false);
-        //remove(mainMenuPanel);
-
-        //gamePanel = new GamePanel(600,500,50, gameTimer);
-
-
-
-        //gamePanel.requestFocus(); // very important
     }
 
-    private void waitForGameModeSelection(){
-        gameModeSelectionMenu.resetOption();
-        while (gameModeSelectionMenu.getGameMode() == null){
-            gameMode = gameModeSelectionMenu.getGameMode();
-            System.out.println(gameMode);
-            System.out.println("waitinmg");
+    public void startThread(){
+        if (gameThread.isAlive()){
+            return;
         }
+        gameThread.start();
     }
 
+    public void stateChanged(GameState state){
+        System.out.println("IN main panel");
+        frameManager.update(state);
+    }
+
+
+
+    //TODO new approach: start run only if playing the game, change frames with button clicks and FrameManger
     @Override
     public void run() {
         double runInterval = 1000000000/60;
         double nextInterval = System.nanoTime() + runInterval;
 
         System.out.println("state:" + gameStateManager.getCurrentState());
+        GameState state = gameStateManager.getCurrentState();
+        while (state == GameState.PLAYING || state == GameState.RESET_LEVEL || state == GameState.GAME_MODE_CHOICE){
 
-        while (gameThread != null){
-            GameState state = gameStateManager.getCurrentState();
             //System.out.println(gameModeSelectionMenu.getGameMode());
-            frameManager.update(state);
+            //frameManager.update(state);
             switch (state){
                 case GAME_MODE_CHOICE -> {
+                    System.out.println("HERE");
                     gameMode = gameModeSelectionMenu.getGameMode();
                     if (gameMode != null){
                         gamePanel.setGameMode(gameMode);
+
                         //gameStateManager.setCurrentState(GameState.PLAYING);
                     }
                 }
@@ -110,6 +106,7 @@ public class MainPanel extends JPanel implements Runnable{
                     gamePanel.resetLevel();
                 }
                 case PLAYING -> {
+
                     gamePanel.updateGame();
                 }
             }
@@ -128,6 +125,7 @@ public class MainPanel extends JPanel implements Runnable{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            state = gameStateManager.getCurrentState();
         }
     }
 

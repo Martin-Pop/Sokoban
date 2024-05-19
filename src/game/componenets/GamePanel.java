@@ -60,17 +60,21 @@ public class GamePanel extends JPanel {
             }else {
                 levelManager.setCurrentLevel(1);
             }
-            gameStateManager.setCurrentState(GameState.PLAYING);
+
         }else {
+            System.out.println("HEHEHA");
             return;
             //TODO let player choose his level
         }
 
         this.level = levelManager.getCurrentLevel();
+        System.out.println(level);
         System.out.println(level.getLevelNumber());
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
 
         timer.setNewTime(level.getTimeAmount());
+
+        gameStateManager.setCurrentState(GameState.PLAYING);
         informationPanel.setLevelNumber(level.getLevelNumber());
     }
 

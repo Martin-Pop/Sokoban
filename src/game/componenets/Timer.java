@@ -56,6 +56,7 @@ public class Timer extends JPanel implements Runnable{
     }
 
     public void setNewTime(int time) {
+        this.stopTimer = false;
         this.timerTime = time;
         if (!timerThread.isAlive()){
             start();
@@ -68,6 +69,10 @@ public class Timer extends JPanel implements Runnable{
         }else {
             timeLabel.setText("infinite");
         }
+    }
+
+    public void stopTimer(){
+        this.stopTimer = true;
     }
 
     @Override
