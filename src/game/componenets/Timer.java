@@ -23,8 +23,6 @@ public class Timer extends JPanel implements Runnable{
         setFocusable(true);
         setLayout(null);
 
-        this.timerThread = new Thread(this);
-
         label = new JLabel("REMAINING TIME:");
         label.setBounds(0,0,150,50);
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -56,14 +54,16 @@ public class Timer extends JPanel implements Runnable{
     }
 
     public void setNewTime(int time) {
-        this.stopTimer = false;
+        reset();
         this.timerTime = time;
         if (!timerThread.isAlive()){
+
             start();
         }
     }
 
     public void start(){
+
         if (!infiniteTime){
             this.timerThread.start();
         }else {
@@ -73,6 +73,15 @@ public class Timer extends JPanel implements Runnable{
 
     public void stopTimer(){
         this.stopTimer = true;
+        System.out.println("TIME STOPPED");
+    }
+
+    private void reset(){
+        this.stopTimer = false;
+        this.runOutOfTime = false;
+        this.infiniteTime = false;
+
+        this.timerThread = new Thread(this);
     }
 
     @Override
@@ -81,7 +90,6 @@ public class Timer extends JPanel implements Runnable{
             try {
                 timerTime--;
                 timeLabel.setText(String.valueOf(timerTime));
-                System.out.println("running");
                 Thread.sleep(1000);
 
             } catch (InterruptedException e) {

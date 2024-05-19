@@ -28,7 +28,7 @@ public class ReturnToMenuPanel extends JPanel {
         resetButton.setFocusable(false);
         resetButton.setBorder(null);
         //resetButton.setFont(new Font("Ariel", Font.PLAIN, 25));
-        resetButton.addActionListener(e -> gameStateManager.setCurrentState(GameState.RETURN_TO_MENU));
+        resetButton.addActionListener(e -> gameStateManager.setCurrentState(GameState.MAIN_MENU));
 
         add(resetButton);
         setVisible(false);

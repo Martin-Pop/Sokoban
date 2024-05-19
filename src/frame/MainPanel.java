@@ -22,6 +22,7 @@ public class MainPanel extends JPanel implements Runnable{
     ControlPanel controlPanel;
     ReturnToMenuPanel returnToMenuPanel;
     InformationPanel informationPanel;
+    LevelSelectionMenu levelSelectionMenu;
 
     FrameManager frameManager;
 
@@ -35,6 +36,7 @@ public class MainPanel extends JPanel implements Runnable{
         setLayout(null);
 
         gameModeSelectionMenu = new GameModeSelectionMenu();
+        levelSelectionMenu = new LevelSelectionMenu(10);
         gameStateManager = new GameStateManager(this);
         mainMenu = new MainMenu(gameStateManager);
         controlPanel = new ControlPanel(gameStateManager);
@@ -43,7 +45,7 @@ public class MainPanel extends JPanel implements Runnable{
         gameTimer = new Timer();
         gamePanel = new GamePanel(600,500, gameTimer, gameStateManager, informationPanel);
 
-        frameManager = new FrameManager(this,mainMenu,gameModeSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
+        frameManager = new FrameManager(this,mainMenu,gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
 
         add(gameModeSelectionMenu);
         add(mainMenu);
@@ -51,6 +53,8 @@ public class MainPanel extends JPanel implements Runnable{
         add(gameTimer);
         add(informationPanel);
         add(returnToMenuPanel);
+        add(levelSelectionMenu);
+
         add(gamePanel);
         //gameModeSelectionMenu.setVisible(true);
 
@@ -67,14 +71,14 @@ public class MainPanel extends JPanel implements Runnable{
     }
 
     public void startThread(){
-        if (gameThread.isAlive()){
-            return;
+        System.out.println(gameThread.getState());
+        if (!gameThread.isAlive()){
+            gameThread = new Thread(this);
+            gameThread.start();
         }
-        gameThread.start();
     }
 
     public void stateChanged(GameState state){
-        System.out.println("IN main panel");
         frameManager.update(state);
     }
 
@@ -86,15 +90,16 @@ public class MainPanel extends JPanel implements Runnable{
         double runInterval = 1000000000/60;
         double nextInterval = System.nanoTime() + runInterval;
 
+
         System.out.println("state:" + gameStateManager.getCurrentState());
         GameState state = gameStateManager.getCurrentState();
-        while (state == GameState.PLAYING || state == GameState.RESET_LEVEL || state == GameState.GAME_MODE_CHOICE){
+        while (state == GameState.PLAYING || state == GameState.RESET_LEVEL || state == GameState.GAME_MODE_CHOICE|| state == GameState.LEVEL_CHOICE){
 
             //System.out.println(gameModeSelectionMenu.getGameMode());
             //frameManager.update(state);
             switch (state){
                 case GAME_MODE_CHOICE -> {
-                    System.out.println("HERE");
+                    //System.out.println("HERE");
                     gameMode = gameModeSelectionMenu.getGameMode();
                     if (gameMode != null){
                         gamePanel.setGameMode(gameMode);
@@ -108,6 +113,9 @@ public class MainPanel extends JPanel implements Runnable{
                 case PLAYING -> {
 
                     gamePanel.updateGame();
+                }
+                case LEVEL_CHOICE -> {
+                    System.out.println("choosing level");
                 }
             }
 
@@ -127,6 +135,7 @@ public class MainPanel extends JPanel implements Runnable{
             }
             state = gameStateManager.getCurrentState();
         }
+        System.out.println("THREAD IS ENDING");
     }
 
     @Override

@@ -10,6 +10,7 @@ public class FrameManager {
 
     private MainMenu mainMenu;
     private GameModeSelectionMenu gameModeSelectionMenu;
+    private LevelSelectionMenu levelSelectionMenu;
     private GamePanel gamePanel;
     private Timer timer;
     private ControlPanel controlPanel;
@@ -18,10 +19,11 @@ public class FrameManager {
 
     private GameState lastGameState;
 
-    public FrameManager(MainPanel mainPanel, MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, GamePanel gamePanel, Timer timer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
+    public FrameManager(MainPanel mainPanel, MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, Timer timer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
         this.mainPanel = mainPanel;
         this.mainMenu = mainMenu;
         this.gameModeSelectionMenu = gameModeSelectionMenu;
+        this.levelSelectionMenu = levelSelectionMenu;
         this.gamePanel = gamePanel;
         this.timer = timer;
         this.controlPanel = controlPanel;
@@ -30,14 +32,13 @@ public class FrameManager {
     }
 
     public void update(GameState newGameState){
-        System.out.println("IN frame manager");
         System.out.println("last state :" + lastGameState);
+        System.out.println("new state :" + newGameState);
         if (newGameState != lastGameState){
-            System.out.println(newGameState);
             switch (newGameState){
                 case PLAYING, RESET_LEVEL, RUN_OUT_OF_TIME -> {
-                    System.out.println("playin");
                     this.gameModeSelectionMenu.setVisible(false);
+                    this.levelSelectionMenu.setVisible(false);
                     this.timer.setVisible(true);
                     this.controlPanel.setVisible(true);
                     this.informationPanel.setVisible(true);
@@ -51,27 +52,36 @@ public class FrameManager {
                     //win
                 }
                 case MAIN_MENU -> {
-                    System.out.println("mainmenu");
                     this.gamePanel.setVisible(false);
                     this.timer.setVisible(false);
                     this.controlPanel.setVisible(false);
                     this.informationPanel.setVisible(false);
                     this.returnToMenuPanel.setVisible(false);
+                    this.levelSelectionMenu.setVisible(false);
                     this.mainMenu.setVisible(true);
                     this.mainMenu.requestFocus();
                     this.timer.stopTimer();
                 }
                 case LEVEL_CHOICE -> {
-                    //level options
+                    this.gameModeSelectionMenu.setVisible(false);
+                    this.mainMenu.setVisible(false);
+                    this.gamePanel.setVisible(false);
+                    this.controlPanel.setVisible(false);
+                    this.informationPanel.setVisible(false);
+                    this.returnToMenuPanel.setVisible(true);
+                    this.timer.setVisible(false);
+                    this.levelSelectionMenu.setVisible(true);
+                    this.levelSelectionMenu.requestFocus();
                 }
                 case GAME_MODE_CHOICE -> {
-                    System.out.println("gamemode");
                     this.mainMenu.setVisible(false);
+                    this.levelSelectionMenu.setVisible(false);
                     this.gamePanel.setVisible(false);
                     this.controlPanel.setVisible(false);
                     this.informationPanel.setVisible(false);
                     this.returnToMenuPanel.setVisible(false);
                     this.timer.setVisible(false);
+                    this.gameModeSelectionMenu.resetOption();
                     this.gameModeSelectionMenu.setVisible(true);
                     this.gameModeSelectionMenu.requestFocus();
 

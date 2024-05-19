@@ -8,5 +8,4 @@ public enum GameState {
     RESET_LEVEL,
     GAME_MODE_CHOICE,
     RUN_OUT_OF_TIME,
-    RETURN_TO_MENU
 }

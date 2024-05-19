@@ -62,7 +62,8 @@ public class GamePanel extends JPanel {
             }
 
         }else {
-            System.out.println("HEHEHA");
+            gameStateManager.setCurrentState(GameState.LEVEL_CHOICE);
+            //System.out.println("HEHEHA");
             return;
             //TODO let player choose his level
         }
@@ -71,6 +72,7 @@ public class GamePanel extends JPanel {
         System.out.println(level);
         System.out.println(level.getLevelNumber());
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
+        resetLevel();
 
         timer.setNewTime(level.getTimeAmount());
 
@@ -81,8 +83,13 @@ public class GamePanel extends JPanel {
     public void resetLevel(){
         this.level.resetBoxes();
         this.player.resetPlayer();
-        gameStateManager.setCurrentState(GameState.PLAYING);
+        if (!timer.runOutOfTime()){
+            gameStateManager.setCurrentState(GameState.PLAYING);
+        }else {
+            System.out.println("CAN NO RESET LEVEL YOU HAVE RUN OUT OF TIME");
+        }
     }
+
 
     private Direction direction = Direction.NONE;
     private Direction lastDirection;
@@ -92,7 +99,6 @@ public class GamePanel extends JPanel {
     private Box box; //current box
 
     public void updateGame() {
-        //TODO update game based of game state
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 
@@ -128,7 +134,7 @@ public class GamePanel extends JPanel {
                 keyHandler.revertMovement = false;
                 return;
             } else {
-                System.out.println("NOO");
+                System.out.println("nothing in stack");
                 keyHandler.revertMovement = false;
             }
         }
