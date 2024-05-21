@@ -4,6 +4,11 @@ import game.GameState;
 import game.componenets.*;
 import game.componenets.Timer;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 public class FrameManager {
 
     private MainPanel mainPanel;
@@ -17,10 +22,13 @@ public class FrameManager {
     private ReturnToMenuPanel returnToMenuPanel;
     private InformationPanel informationPanel;
 
+    private ArrayList<JPanel> panels = new ArrayList<>();
+
     private GameState lastGameState;
 
     public FrameManager(MainPanel mainPanel, MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, Timer timer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
         this.mainPanel = mainPanel;
+
         this.mainMenu = mainMenu;
         this.gameModeSelectionMenu = gameModeSelectionMenu;
         this.levelSelectionMenu = levelSelectionMenu;
@@ -29,6 +37,15 @@ public class FrameManager {
         this.controlPanel = controlPanel;
         this.returnToMenuPanel = returnToMenuPanel;
         this.informationPanel = informationPanel;
+
+        panels.add(this.mainMenu);
+        panels.add(this.gameModeSelectionMenu);
+        panels.add(this.levelSelectionMenu);
+        panels.add(this.gamePanel);
+        panels.add(this.timer);
+        panels.add(this.controlPanel);
+        panels.add(this.returnToMenuPanel);
+        panels.add(this.informationPanel);
     }
 
     public void update(GameState newGameState){
@@ -37,55 +54,23 @@ public class FrameManager {
         if (newGameState != lastGameState){
             switch (newGameState){
                 case PLAYING, RESET_LEVEL, RUN_OUT_OF_TIME -> {
-                    this.gameModeSelectionMenu.setVisible(false);
-                    this.levelSelectionMenu.setVisible(false);
-                    this.timer.setVisible(true);
-                    this.controlPanel.setVisible(true);
-                    this.informationPanel.setVisible(true);
-                    this.returnToMenuPanel.setVisible(true);
-                    this.gamePanel.setVisible(true);
-                    this.gamePanel.requestFocus();
 
-                    this.mainPanel.startThread();
-                }
-                case WINNER -> {
-                    //win
+                    openAllExcept(new ArrayList<>(Arrays.asList(gameModeSelectionMenu,levelSelectionMenu, mainMenu)));
+                    this.gamePanel.requestFocus();
                 }
                 case MAIN_MENU -> {
-                    this.gamePanel.setVisible(false);
-                    this.timer.setVisible(false);
-                    this.controlPanel.setVisible(false);
-                    this.informationPanel.setVisible(false);
-                    this.returnToMenuPanel.setVisible(false);
-                    this.levelSelectionMenu.setVisible(false);
-                    this.mainMenu.setVisible(true);
+                    closeAllExcept(new ArrayList<>(Collections.singletonList(mainMenu)));
                     this.mainMenu.requestFocus();
-                    this.timer.stopTimer();
                 }
                 case LEVEL_CHOICE -> {
-                    this.gameModeSelectionMenu.setVisible(false);
-                    this.mainMenu.setVisible(false);
-                    this.gamePanel.setVisible(false);
-                    this.controlPanel.setVisible(false);
-                    this.informationPanel.setVisible(false);
-                    this.returnToMenuPanel.setVisible(true);
-                    this.timer.setVisible(false);
-                    this.levelSelectionMenu.setVisible(true);
+                    closeAllExcept(new ArrayList<>(Collections.singletonList(levelSelectionMenu)));
                     this.levelSelectionMenu.requestFocus();
                 }
                 case GAME_MODE_CHOICE -> {
-                    this.mainMenu.setVisible(false);
-                    this.levelSelectionMenu.setVisible(false);
-                    this.gamePanel.setVisible(false);
-                    this.controlPanel.setVisible(false);
-                    this.informationPanel.setVisible(false);
-                    this.returnToMenuPanel.setVisible(false);
-                    this.timer.setVisible(false);
-                    this.gameModeSelectionMenu.resetOption();
-                    this.gameModeSelectionMenu.setVisible(true);
-                    this.gameModeSelectionMenu.requestFocus();
+                    closeAllExcept(new ArrayList<>(Collections.singletonList(gameModeSelectionMenu)));
 
-                    this.mainPanel.startThread();
+                    this.gameModeSelectionMenu.resetOption();
+                    this.gameModeSelectionMenu.requestFocus();
 
                 }
                 default -> {
@@ -93,6 +78,18 @@ public class FrameManager {
                 }
             }
             lastGameState = newGameState;
+        }
+    }
+
+    private void closeAllExcept(ArrayList<JPanel> p){
+        for (JPanel panel: panels) {
+            panel.setVisible(p.contains(panel));
+        }
+    }
+
+    private void openAllExcept(ArrayList<JPanel> p){
+        for (JPanel panel: panels) {
+            panel.setVisible(!p.contains(panel));
         }
     }
 }

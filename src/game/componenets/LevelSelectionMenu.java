@@ -22,8 +22,6 @@ public class LevelSelectionMenu extends JPanel {
         setBackground(new Color(0, 60, 67));
         setLayout(null);
 
-
-
         label = new JLabel();
         label.setBounds(100,100,700,50);
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -50,5 +48,9 @@ public class LevelSelectionMenu extends JPanel {
 
     public void setSelectedLevel(int selectedLevel) {
         this.selectedLevel = selectedLevel;
+    }
+
+    public int getSelectedLevel() {
+        return selectedLevel;
     }
 }

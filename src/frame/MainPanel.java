@@ -7,6 +7,7 @@ import game.componenets.Timer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.management.ThreadInfo;
 
 public class MainPanel extends JPanel implements Runnable{
 
@@ -46,6 +47,7 @@ public class MainPanel extends JPanel implements Runnable{
         gamePanel = new GamePanel(600,500, gameTimer, gameStateManager, informationPanel);
 
         frameManager = new FrameManager(this,mainMenu,gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
+        gameStateManager.setFrameManager(frameManager);
 
         add(gameModeSelectionMenu);
         add(mainMenu);
@@ -67,55 +69,54 @@ public class MainPanel extends JPanel implements Runnable{
 
     public void startGame(){
         gameStateManager.setCurrentState(GameState.MAIN_MENU);
+        gameThread = new Thread(this);
+        gameThread.start();
 
     }
 
-    public void startThread(){
+    /*public void startThread(){
         System.out.println(gameThread.getState());
         if (!gameThread.isAlive()){
             gameThread = new Thread(this);
             gameThread.start();
         }
-    }
+    }*/
 
-    public void stateChanged(GameState state){
-        frameManager.update(state);
-    }
-
-
-
-    //TODO new approach: start run only if playing the game, change frames with button clicks and FrameManger
     @Override
     public void run() {
         double runInterval = 1000000000/60;
         double nextInterval = System.nanoTime() + runInterval;
 
-
+        System.out.println("running thread id: "+gameThread.getId());
         System.out.println("state:" + gameStateManager.getCurrentState());
         GameState state = gameStateManager.getCurrentState();
-        while (state == GameState.PLAYING || state == GameState.RESET_LEVEL || state == GameState.GAME_MODE_CHOICE|| state == GameState.LEVEL_CHOICE){
-
+        while (gameThread != null){
             //System.out.println(gameModeSelectionMenu.getGameMode());
+            // state == GameState.PLAYING || state == GameState.RESET_LEVEL || state == GameState.GAME_MODE_CHOICE|| state == GameState.LEVEL_CHOICE
             //frameManager.update(state);
+
             switch (state){
                 case GAME_MODE_CHOICE -> {
                     //System.out.println("HERE");
                     gameMode = gameModeSelectionMenu.getGameMode();
                     if (gameMode != null){
                         gamePanel.setGameMode(gameMode);
-
-                        //gameStateManager.setCurrentState(GameState.PLAYING);
                     }
                 }
                 case RESET_LEVEL -> {
                     gamePanel.resetLevel();
                 }
                 case PLAYING -> {
-
                     gamePanel.updateGame();
                 }
                 case LEVEL_CHOICE -> {
-                    System.out.println("choosing level");
+                    if (levelSelectionMenu.getSelectedLevel() > 0) {
+                        gamePanel.setUpLevel(levelSelectionMenu.getSelectedLevel());
+                        gameStateManager.setCurrentState(GameState.PLAYING);
+                    }
+                }case MAIN_MENU -> {
+                    gameModeSelectionMenu.resetOption();
+                    levelSelectionMenu.setSelectedLevel(0);
                 }
             }
 

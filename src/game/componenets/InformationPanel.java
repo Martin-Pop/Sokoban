@@ -37,10 +37,9 @@ public class InformationPanel extends JPanel {
 
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
-        updateLabel();
     }
 
-    public void updateLabel(){
+    public void update(){
         switch (gameStateManager.getCurrentState()){
             case PLAYING -> {
                 informationLabel.setText("Playing level number: " + levelNumber);

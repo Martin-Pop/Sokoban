@@ -15,7 +15,7 @@ public class LevelButton extends JButton {
         setBorder(BorderFactory.createLineBorder(new Color(0, 60, 67),2));
         setText(String.valueOf(levelNumber));
         addActionListener(e -> menu.setSelectedLevel(levelNumber));
-        setVisible(true);
+        //setVisible(true);
 
     }
 

@@ -46,24 +46,16 @@ public class Timer extends JPanel implements Runnable{
     }
 
     public boolean runOutOfTime(){
-        return runOutOfTime;
-    }
-
-    public void enableInfiniteTime(){
-        this.infiniteTime = true;
-    }
-
-    public void setNewTime(int time) {
-        reset();
-        this.timerTime = time;
-        if (!timerThread.isAlive()){
-
-            start();
+        if (infiniteTime){
+            return false;
+        }else {
+            return runOutOfTime;
         }
     }
 
-    public void start(){
-
+    public void startNewTimer(int time, boolean infiniteTime) {
+        reset();
+        this.timerTime = time;
         if (!infiniteTime){
             this.timerThread.start();
         }else {
@@ -71,29 +63,27 @@ public class Timer extends JPanel implements Runnable{
         }
     }
 
-    public void stopTimer(){
-        this.stopTimer = true;
-        System.out.println("TIME STOPPED");
-    }
-
     private void reset(){
-        this.stopTimer = false;
         this.runOutOfTime = false;
         this.infiniteTime = false;
+        if (this.timerThread != null){
+            System.out.println("INTERRUPTING");
+            this.timerThread.interrupt();
+        }
 
         this.timerThread = new Thread(this);
     }
 
     @Override
     public void run() {
-        while (timerTime > 0 && !infiniteTime && !stopTimer){
+        while (timerTime > 0 && !infiniteTime){
             try {
                 timerTime--;
                 timeLabel.setText(String.valueOf(timerTime));
                 Thread.sleep(1000);
 
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                return;
             }
         }
         runOutOfTime = true;

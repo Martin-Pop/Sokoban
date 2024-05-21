@@ -51,34 +51,21 @@ public class GamePanel extends JPanel {
         addKeyListener(keyHandler);
     }
 
-    private void setUpLevel(){
+    public void setUpLevel(int levelNumber){
         System.out.println("RESTARTING LEVEL");
-
-        if (gameMode == GameMode.NORMAL){
-            if (gameStateManager.getCurrentState() == GameState.WINNER){
-                levelManager.nextLevel();
-            }else {
-                levelManager.setCurrentLevel(1);
-            }
-
-        }else {
-            gameStateManager.setCurrentState(GameState.LEVEL_CHOICE);
-            //System.out.println("HEHEHA");
-            return;
-            //TODO let player choose his level
-        }
+        levelManager.setCurrentLevel(levelNumber);
 
         this.level = levelManager.getCurrentLevel();
-        System.out.println(level);
-        System.out.println(level.getLevelNumber());
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
         resetLevel();
-
-        timer.setNewTime(level.getTimeAmount());
-
-        gameStateManager.setCurrentState(GameState.PLAYING);
+        //TODO maybe set the timer inside update
+        timer.startNewTimer(level.getTimeAmount(), gameMode == GameMode.FREE);
+        System.out.println("just set timer");
         informationPanel.setLevelNumber(level.getLevelNumber());
+        gameStateManager.setCurrentState(GameState.PLAYING);
+        informationPanel.update();
     }
+
 
     public void resetLevel(){
         this.level.resetBoxes();
@@ -88,6 +75,7 @@ public class GamePanel extends JPanel {
         }else {
             System.out.println("CAN NO RESET LEVEL YOU HAVE RUN OUT OF TIME");
         }
+        informationPanel.update();
     }
 
 
@@ -99,6 +87,7 @@ public class GamePanel extends JPanel {
     private Box box; //current box
 
     public void updateGame() {
+
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 
@@ -107,14 +96,18 @@ public class GamePanel extends JPanel {
         if (timer.runOutOfTime()){
             System.out.println("RUN OUT OF TIME");
             gameStateManager.setCurrentState(GameState.RUN_OUT_OF_TIME);
-            informationPanel.updateLabel();
+            informationPanel.update();
             return;
         }
 
         if (direction == Direction.NONE && level.checkWin()){
             System.out.println("WINNER");
-            gameStateManager.setCurrentState(GameState.WINNER);
-            setUpLevel();
+            if (gameMode == GameMode.NORMAL){
+                setUpLevel(levelManager.nextLevel());
+            }else {
+                gameStateManager.setCurrentState(GameState.WINNER);
+            }
+            informationPanel.update();
             return;
         }
 
@@ -185,7 +178,7 @@ public class GamePanel extends JPanel {
             }
 
         }
-
+        //System.out.println("above repaint");
         repaint();
     }
 
@@ -211,7 +204,13 @@ public class GamePanel extends JPanel {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
-        setUpLevel();
+        if (gameMode == GameMode.FREE){
+            gameStateManager.setCurrentState(GameState.LEVEL_CHOICE);
+        }else {
+            setUpLevel(1);
+        }
+
+        //
     }
 
     @Override
