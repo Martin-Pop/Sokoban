@@ -3,7 +3,7 @@ package game.componenets;
 import javax.swing.*;
 import java.awt.*;
 
-public class Timer extends JPanel implements Runnable{
+public class GameTimer extends JPanel implements Runnable{
 
     private JLabel label;
     private JLabel timeLabel;
@@ -12,9 +12,8 @@ public class Timer extends JPanel implements Runnable{
     private int timerTime;
     private boolean runOutOfTime = false;
     private boolean infiniteTime = false;
-    private boolean stopTimer = false;
 
-    public Timer() {
+    public GameTimer() {
         initialize();
     }
 
@@ -67,7 +66,7 @@ public class Timer extends JPanel implements Runnable{
         this.runOutOfTime = false;
         this.infiniteTime = false;
         if (this.timerThread != null){
-            System.out.println("INTERRUPTING");
+
             this.timerThread.interrupt();
         }
 
@@ -83,6 +82,7 @@ public class Timer extends JPanel implements Runnable{
                 Thread.sleep(1000);
 
             } catch (InterruptedException e) {
+                System.out.println("TIME WAS STOPPED");
                 return;
             }
         }

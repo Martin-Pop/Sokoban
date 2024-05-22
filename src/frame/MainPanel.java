@@ -3,11 +3,10 @@ package frame;
 import game.GameMode;
 import game.GameState;
 import game.componenets.*;
-import game.componenets.Timer;
+import game.componenets.GameTimer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.management.ThreadInfo;
 
 public class MainPanel extends JPanel implements Runnable{
 
@@ -18,7 +17,7 @@ public class MainPanel extends JPanel implements Runnable{
 
     GameModeSelectionMenu gameModeSelectionMenu;
     MainMenu mainMenu;
-    Timer gameTimer;
+    GameTimer gameTimer;
     GamePanel gamePanel;
     ControlPanel controlPanel;
     ReturnToMenuPanel returnToMenuPanel;
@@ -43,7 +42,7 @@ public class MainPanel extends JPanel implements Runnable{
         controlPanel = new ControlPanel(gameStateManager);
         returnToMenuPanel = new ReturnToMenuPanel(gameStateManager);
         informationPanel = new InformationPanel(gameStateManager);
-        gameTimer = new Timer();
+        gameTimer = new GameTimer();
         gamePanel = new GamePanel(600,500, gameTimer, gameStateManager, informationPanel);
 
         frameManager = new FrameManager(this,mainMenu,gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);

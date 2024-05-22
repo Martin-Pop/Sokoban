@@ -23,7 +23,7 @@ public class LevelSelectionMenu extends JPanel {
         setLayout(null);
 
         label = new JLabel();
-        label.setBounds(100,100,700,50);
+        label.setBounds(100,50,700,50);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setText("SELECT LEVEL");
         label.setForeground(new Color(119, 176, 170));
@@ -32,9 +32,10 @@ public class LevelSelectionMenu extends JPanel {
         label.setFont(new Font("Ariel", Font.PLAIN, 25));
 
         levelsPanel = new JPanel();
-        levelsPanel.setBounds(100,200, 700,500);
+        levelsPanel.setBounds(100,200, 700,450);
         levelsPanel.setBackground(new Color(19, 93, 102));
-        levelsPanel.setLayout(new GridLayout((levelsAmount/4)+1,4));
+        levelsPanel.setBorder(BorderFactory.createLineBorder(new Color(19, 93, 102),10));
+        levelsPanel.setLayout(new GridLayout((levelsAmount/3)+1,3,10,10));
 
         buttons = new LevelButton[levelsAmount];
         for (int i = 0; i < levelsAmount; i++) {

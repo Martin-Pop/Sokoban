@@ -8,12 +8,13 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Level {
 
-    private final int levelNumber;
-    private final int timeAmount;
+    private int levelNumber;
+    private int timeAmount;
 
     private int playerSpawnX;
     private int playerSpawnY;
@@ -23,11 +24,9 @@ public class Level {
     private Tile[][] tiles = new Tile[12][10];
     private ArrayList<Box> boxes = new ArrayList<>();
 
-    public Level(int levelNumber, int timeAmount, String path) {
-        this.levelNumber = levelNumber;
-        this.timeAmount = timeAmount;
+    public Level(String path) {
         createTiles();
-        loadTiles(path);
+        loadLevel(path);
     }
 
     public void createTiles(){
@@ -41,7 +40,7 @@ public class Level {
         }
     }
 
-    public void loadTiles(String path){
+    public void loadLevel(String path){
         try {
             InputStream is = getClass().getResourceAsStream(path);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -51,32 +50,45 @@ public class Level {
             String line = "";
 
             while ((line = br.readLine()) != null){
-                String[] s = line.split("\\s");
-                for (int i = 0; i< s.length;i++){
-                    switch (s[i]){
-                        case "0" -> tiles[i][column] = tileMap.get("floor");
-                        case "1" -> tiles[i][column] = tileMap.get("wall");
-                        case "2" -> tiles[i][column] = tileMap.get("boxDestination");
-                        case "3" -> {
-                            tiles[i][column] = tileMap.get("floor");
-                            boxes.add(new Box(i*50,column*50,boxCount,
-                                    ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayBox.png")),
-                                    ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
-                            ));
-                            boxCount++;
-                        }
-                        case "4" -> {
-                            tiles[i][column] = tileMap.get("floor");
-                            playerSpawnX = i*50;
-                            playerSpawnY = column*50;
+                if (line.charAt(0) == '#'){
+                    String[] s = line.split("[=]");
+                    if (s[0].equals("#levelNumber")){
+                        this.levelNumber = Integer.parseInt(s[1]);
+                    }else {
+                        this.timeAmount = Integer.parseInt(s[1]);
+                    }
+                }else {
+                    System.out.println(column);
+                    String[] s = line.split("\\s");
+                    for (int i = 0; i< s.length;i++){
+                        switch (s[i]){
+                            case "0" -> tiles[i][column] = tileMap.get("floor");
+                            case "1" -> tiles[i][column] = tileMap.get("wall");
+                            case "2" -> tiles[i][column] = tileMap.get("boxDestination");
+                            case "3" -> {
+                                tiles[i][column] = tileMap.get("floor");
+                                boxes.add(new Box(i*50,column*50,boxCount,
+                                        ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayBox.png")),
+                                        ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
+                                ));
+                                boxCount++;
+                            }
+                            case "4" -> {
+                                tiles[i][column] = tileMap.get("floor");
+                                playerSpawnX = i*50;
+                                playerSpawnY = column*50;
+                            }
                         }
                     }
+                    //[row][i] swapped
+                    column++;
                 }
-                //[row][i] swapped
-                column++;
+
             }
 
         }catch (Exception e){
+            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new RuntimeException(e);
         }
     }

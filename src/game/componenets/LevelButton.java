@@ -14,6 +14,7 @@ public class LevelButton extends JButton {
         setOpaque(true);
         setBorder(BorderFactory.createLineBorder(new Color(0, 60, 67),2));
         setText(String.valueOf(levelNumber));
+        setFont(new Font("Dialog", Font.PLAIN, 25));
         addActionListener(e -> menu.setSelectedLevel(levelNumber));
         //setVisible(true);
 

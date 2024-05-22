@@ -29,15 +29,15 @@ public class GamePanel extends JPanel {
     private GameStateManager gameStateManager;
     private InformationPanel informationPanel;
 
-    private Timer timer;
+    private GameTimer gameTimer;
 
-    public GamePanel(int width, int height, Timer timer, GameStateManager gameStateManager, InformationPanel informationPanel) {
+    public GamePanel(int width, int height, GameTimer gameTimer, GameStateManager gameStateManager, InformationPanel informationPanel) {
 
         this.width = width;
         this.height = height;
         this.gameStateManager = gameStateManager;
 
-        this.timer = timer;
+        this.gameTimer = gameTimer;
         this.informationPanel = informationPanel;
 
        initialize();
@@ -59,7 +59,7 @@ public class GamePanel extends JPanel {
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
         resetLevel();
         //TODO maybe set the timer inside update
-        timer.startNewTimer(level.getTimeAmount(), gameMode == GameMode.FREE);
+        gameTimer.startNewTimer(level.getTimeAmount(), gameMode == GameMode.FREE);
         System.out.println("just set timer");
         informationPanel.setLevelNumber(level.getLevelNumber());
         gameStateManager.setCurrentState(GameState.PLAYING);
@@ -70,7 +70,7 @@ public class GamePanel extends JPanel {
     public void resetLevel(){
         this.level.resetBoxes();
         this.player.resetPlayer();
-        if (!timer.runOutOfTime()){
+        if (!gameTimer.runOutOfTime()){
             gameStateManager.setCurrentState(GameState.PLAYING);
         }else {
             System.out.println("CAN NO RESET LEVEL YOU HAVE RUN OUT OF TIME");
@@ -93,7 +93,7 @@ public class GamePanel extends JPanel {
 
         //System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
 
-        if (timer.runOutOfTime()){
+        if (gameTimer.runOutOfTime()){
             System.out.println("RUN OUT OF TIME");
             gameStateManager.setCurrentState(GameState.RUN_OUT_OF_TIME);
             informationPanel.update();

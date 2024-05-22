@@ -2,7 +2,7 @@ package frame;
 
 import game.GameState;
 import game.componenets.*;
-import game.componenets.Timer;
+import game.componenets.GameTimer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class FrameManager {
     private GameModeSelectionMenu gameModeSelectionMenu;
     private LevelSelectionMenu levelSelectionMenu;
     private GamePanel gamePanel;
-    private Timer timer;
+    private GameTimer gameTimer;
     private ControlPanel controlPanel;
     private ReturnToMenuPanel returnToMenuPanel;
     private InformationPanel informationPanel;
@@ -26,14 +26,14 @@ public class FrameManager {
 
     private GameState lastGameState;
 
-    public FrameManager(MainPanel mainPanel, MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, Timer timer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
+    public FrameManager(MainPanel mainPanel, MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, GameTimer gameTimer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
         this.mainPanel = mainPanel;
 
         this.mainMenu = mainMenu;
         this.gameModeSelectionMenu = gameModeSelectionMenu;
         this.levelSelectionMenu = levelSelectionMenu;
         this.gamePanel = gamePanel;
-        this.timer = timer;
+        this.gameTimer = gameTimer;
         this.controlPanel = controlPanel;
         this.returnToMenuPanel = returnToMenuPanel;
         this.informationPanel = informationPanel;
@@ -42,7 +42,7 @@ public class FrameManager {
         panels.add(this.gameModeSelectionMenu);
         panels.add(this.levelSelectionMenu);
         panels.add(this.gamePanel);
-        panels.add(this.timer);
+        panels.add(this.gameTimer);
         panels.add(this.controlPanel);
         panels.add(this.returnToMenuPanel);
         panels.add(this.informationPanel);

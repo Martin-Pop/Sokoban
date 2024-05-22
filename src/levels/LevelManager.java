@@ -11,8 +11,8 @@ public class LevelManager {
     }
 
     private void initializeLevels(){
-        levels.add(new Level(1,20,"/levels/level_one.txt"));
-        levels.add(new Level(2,1,"/levels/level_two.txt"));
+        levels.add(new Level("/levels/level_one.txt"));
+        levels.add(new Level("/levels/level_two.txt"));
     }
 
     public int nextLevel(){
@@ -22,20 +22,6 @@ public class LevelManager {
         }else {
             return 1;
             //no more levels available
-        }
-
-        /*int current = this.currentLevel.getLevelNumber();
-        for (Level l: levels) {
-            if (l.getLevelNumber() == current+1){
-                this.currentLevel = l;
-                break;
-            }
-        }*/
-    }
-
-    public void resetAllLevels(){ //can be simplified
-        for (Level level: levels) {
-            level.resetBoxes();
         }
     }
 
