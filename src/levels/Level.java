@@ -35,6 +35,7 @@ public class Level {
             tileMap.put("floor",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png")),TileType.FLOOR));
             tileMap.put("wall",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png")),TileType.WALL));
             tileMap.put("boxDestination",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/boxDestination.png")),TileType.BOX_DESTINATION));
+            tileMap.put("void", new Tile(TileType.VOID));
         }catch (Exception e){
             System.out.println("TILE IMAGE PATH DOES NOT EXIST");
         }
@@ -45,8 +46,7 @@ public class Level {
             InputStream is = getClass().getResourceAsStream(path);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            int boxCount = 1;
-            int column = 0;
+            int row = 0;
             String line = "";
 
             while ((line = br.readLine()) != null){
@@ -58,37 +58,44 @@ public class Level {
                         this.timeAmount = Integer.parseInt(s[1]);
                     }
                 }else {
-                    System.out.println(column);
                     String[] s = line.split("\\s");
                     for (int i = 0; i< s.length;i++){
                         switch (s[i]){
-                            case "0" -> tiles[i][column] = tileMap.get("floor");
-                            case "1" -> tiles[i][column] = tileMap.get("wall");
-                            case "2" -> tiles[i][column] = tileMap.get("boxDestination");
-                            case "3" -> {
-                                tiles[i][column] = tileMap.get("floor");
-                                boxes.add(new Box(i*50,column*50,boxCount,
-                                        ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayBox.png")),
-                                        ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
-                                ));
-                                boxCount++;
+                            case "0" -> tiles[i][row] = tileMap.get("void");
+                            case "1" -> tiles[i][row] = tileMap.get("floor");
+                            case "2" -> tiles[i][row] = tileMap.get("boxDestination");
+                            case "3" -> tiles[i][row] = tileMap.get("wall");
+                            case "4" -> { //box
+                                tiles[i][row] = tileMap.get("floor");
+                                addBox(i, row, false);
                             }
-                            case "4" -> {
-                                tiles[i][column] = tileMap.get("floor");
+                            case "5" -> { // player
+                                tiles[i][row] = tileMap.get("floor");
                                 playerSpawnX = i*50;
-                                playerSpawnY = column*50;
+                                playerSpawnY = row*50;
+                            }case "6" -> {// box but on box destination
+                                tiles[i][row] = tileMap.get("boxDestination");
+                                addBox(i, row, true);
                             }
                         }
                     }
-                    //[row][i] swapped
-                    column++;
+                    row++;
                 }
 
             }
 
         }catch (Exception e){
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            throw new RuntimeException(e);
+        }
+    }
 
+    private void addBox(int i, int row, boolean defaultCorrectPosition){
+        try {
+            this.boxes.add(new Box(i*50,row*50,defaultCorrectPosition,
+                    ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayBox.png")),
+                    ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
+            ));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -124,9 +131,14 @@ public class Level {
 
     public void drawLevel(Graphics2D g2){
         //floor
+        g2.setColor(new Color(0, 60, 67));
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
-                g2.drawImage(tiles[i][j].getImage(),i*50,j*50,50,50,null);
+                if (tiles[i][j].getTileType() == TileType.VOID){
+                    g2.fillRect(i*50,j*50,50,50);
+                }else {
+                    g2.drawImage(tiles[i][j].getImage(),i*50,j*50,50,50,null);
+                }
             }
         }
         //boxes

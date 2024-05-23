@@ -3,6 +3,6 @@ package levels;
 public enum TileType {
     WALL,
     FLOOR,
-    BOX_SPAWN,
+    VOID,
     BOX_DESTINATION
 }

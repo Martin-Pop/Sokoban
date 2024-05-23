@@ -70,6 +70,7 @@ public class GamePanel extends JPanel {
     public void resetLevel(){
         this.level.resetBoxes();
         this.player.resetPlayer();
+        this.stack.clear();
         if (!gameTimer.runOutOfTime()){
             gameStateManager.setCurrentState(GameState.PLAYING);
         }else {

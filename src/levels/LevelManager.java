@@ -11,8 +11,15 @@ public class LevelManager {
     }
 
     private void initializeLevels(){
-        levels.add(new Level("/levels/level_one.txt"));
-        levels.add(new Level("/levels/level_two.txt"));
+        levels.add(new Level("/levels/levelFiles/level_one.txt"));
+        levels.add(new Level("/levels/levelFiles/level_two.txt"));
+        levels.add(new Level("/levels/levelFiles/level_three.txt"));
+        levels.add(new Level("/levels/levelFiles/level_four.txt"));
+        levels.add(new Level("/levels/levelFiles/level_five.txt"));
+        levels.add(new Level("/levels/levelFiles/level_six.txt"));
+        levels.add(new Level("/levels/levelFiles/level_seven.txt"));
+        levels.add(new Level("/levels/levelFiles/level_eight.txt"));
+        levels.add(new Level("/levels/levelFiles/level_nine.txt"));
     }
 
     public int nextLevel(){

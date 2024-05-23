@@ -12,16 +12,17 @@ public class Box {
     private final int starterPositionX;
     private final int starterPositionY;
 
-    private boolean correctPosition = false;
 
-    private int boxNumber;
+    private final boolean defaultCorrectPosition;
+    private boolean correctPosition;
     private BufferedImage image;
     private BufferedImage winnerImage;
 
-    public Box(int posX, int posY, int boxNumber, BufferedImage image, BufferedImage winnerImage) {
+    public Box(int posX, int posY, boolean defaultCorrectPosition, BufferedImage image, BufferedImage winnerImage) {
         this.posX = posX;
         this.posY = posY;
-        this.boxNumber = boxNumber;
+        this.defaultCorrectPosition = defaultCorrectPosition;
+        this.correctPosition = defaultCorrectPosition;
         this.image = image;
         this.winnerImage = winnerImage;
 
@@ -73,7 +74,7 @@ public class Box {
     public void resetPosition(){
         this.posX = starterPositionX;
         this.posY = starterPositionY;
-        setCorrectPosition(false);
+        setCorrectPosition(defaultCorrectPosition);
     }
 
 }
