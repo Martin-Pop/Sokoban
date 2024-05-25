@@ -24,10 +24,11 @@ public class LevelManager {
 
     public int nextLevel(){
         int next = this.currentLevel.getLevelNumber()+1;
-        if (next <= levels.size()){
+        if (next <= 2){ //CHANGE BACK TO LEVELS SIZE
             return next;
         }else {
-            return 1;
+            return 0;
+
             //no more levels available
         }
     }

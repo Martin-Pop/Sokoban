@@ -62,7 +62,7 @@ public class GameTimer extends JPanel implements Runnable{
         }
     }
 
-    private void reset(){
+    public void reset(){
         this.runOutOfTime = false;
         this.infiniteTime = false;
         if (this.timerThread != null){

@@ -5,6 +5,7 @@ import game.GameState;
 import game.movement.KeyHandler;
 import game.movement.Movement;
 import game.movement.MovementStack;
+import game.player.Player;
 import levels.Level;
 import levels.LevelManager;
 import levels.TileType;
@@ -71,17 +72,17 @@ public class GamePanel extends JPanel {
         this.level.resetBoxes();
         this.player.resetPlayer();
         this.stack.clear();
-        if (!gameTimer.runOutOfTime()){
+        if (!gameTimer.runOutOfTime() || gameStateManager.getCurrentState() == GameState.WINNER){
             gameStateManager.setCurrentState(GameState.PLAYING);
         }else {
-            System.out.println("CAN NO RESET LEVEL YOU HAVE RUN OUT OF TIME");
+            System.out.println("CAN NO RESET LEVEL");
         }
         informationPanel.update();
     }
 
 
     private Direction direction = Direction.NONE;
-    private Direction lastDirection;
+    private Direction lastDirection = Direction.NONE;
 
     private int boxMoved = 0; //if box was moved more tiles in one direction
     private int speed = 3; // movement speed
@@ -101,10 +102,16 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        if (direction == Direction.NONE && level.checkWin()){
+        if ((direction == Direction.NONE && level.checkWin()) || gameStateManager.getCurrentState() == GameState.WINNER){
             System.out.println("WINNER");
             if (gameMode == GameMode.NORMAL){
-                setUpLevel(levelManager.nextLevel());
+                int next = levelManager.nextLevel();
+                if (next !=0){ // if there still are levels
+                    setUpLevel(levelManager.nextLevel());
+                }else {
+                    gameStateManager.setCurrentState(GameState.WINNER);
+                    gameTimer.reset();
+                }
             }else {
                 gameStateManager.setCurrentState(GameState.WINNER);
             }
@@ -220,6 +227,6 @@ public class GamePanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         level.drawLevel(g2);
-        player.drawPlayer(g2);
+        player.drawPlayer(g2, direction, lastDirection, box != null);
     }
 }
