@@ -1,5 +1,5 @@
 #levelNumber=9
-#levelTime=250
+#levelTime=300
 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 3 3 3 3 3 3 3 0 0 0

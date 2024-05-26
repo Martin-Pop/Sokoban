@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class MainMenu extends JPanel {
 
-    private GameStateManager gameStateManager;
+    private final GameStateManager gameStateManager;
     public MainMenu(GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
         initialize();
@@ -18,10 +18,10 @@ public class MainMenu extends JPanel {
         setBackground(new Color(0, 60, 67));
         setLayout(null);
 
-        JButton button = new JButton("Click to start");
+        JButton button = new JButton();
         button.setBounds(100,350,700,100);
         button.setHorizontalAlignment(SwingConstants.CENTER);
-        button.setText("PRESS TO START THE GAME");
+        button.setText("CLICK HERE TO START THE GAME");
         button.setForeground(new Color(119, 176, 170));
         button.setBackground(new Color(19, 93, 102));
         button.setFocusable(false);

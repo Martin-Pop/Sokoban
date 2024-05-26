@@ -11,23 +11,20 @@ import java.util.Collections;
 
 public class FrameManager {
 
-    private MainPanel mainPanel;
+    private final MainMenu mainMenu;
+    private final GameModeSelectionMenu gameModeSelectionMenu;
+    private final LevelSelectionMenu levelSelectionMenu;
+    private final GamePanel gamePanel;
+    private final GameTimer gameTimer;
+    private final ControlPanel controlPanel;
+    private final ReturnToMenuPanel returnToMenuPanel;
+    private final InformationPanel informationPanel;
 
-    private MainMenu mainMenu;
-    private GameModeSelectionMenu gameModeSelectionMenu;
-    private LevelSelectionMenu levelSelectionMenu;
-    private GamePanel gamePanel;
-    private GameTimer gameTimer;
-    private ControlPanel controlPanel;
-    private ReturnToMenuPanel returnToMenuPanel;
-    private InformationPanel informationPanel;
-
-    private ArrayList<JPanel> panels = new ArrayList<>();
+    private final ArrayList<JPanel> panels = new ArrayList<>();
 
     private GameState lastGameState;
 
-    public FrameManager(MainPanel mainPanel, MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, GameTimer gameTimer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
-        this.mainPanel = mainPanel;
+    public FrameManager(MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, GameTimer gameTimer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
 
         this.mainMenu = mainMenu;
         this.gameModeSelectionMenu = gameModeSelectionMenu;
@@ -48,14 +45,12 @@ public class FrameManager {
         panels.add(this.informationPanel);
     }
 
-    public void update(GameState newGameState){
-        System.out.println("last state :" + lastGameState);
-        System.out.println("new state :" + newGameState);
-        if (newGameState != lastGameState){
-            switch (newGameState){
+    public void update(GameState newGameState) {
+        if (newGameState != lastGameState) {
+            switch (newGameState) {
                 case PLAYING, RESET_LEVEL, RUN_OUT_OF_TIME -> {
 
-                    openAllExcept(new ArrayList<>(Arrays.asList(gameModeSelectionMenu,levelSelectionMenu, mainMenu)));
+                    openAllExcept(new ArrayList<>(Arrays.asList(gameModeSelectionMenu, levelSelectionMenu, mainMenu)));
                     this.gamePanel.requestFocus();
                 }
                 case MAIN_MENU -> {
@@ -81,14 +76,14 @@ public class FrameManager {
         }
     }
 
-    private void closeAllExcept(ArrayList<JPanel> p){
-        for (JPanel panel: panels) {
+    private void closeAllExcept(ArrayList<JPanel> p) {
+        for (JPanel panel : panels) {
             panel.setVisible(p.contains(panel));
         }
     }
 
-    private void openAllExcept(ArrayList<JPanel> p){
-        for (JPanel panel: panels) {
+    private void openAllExcept(ArrayList<JPanel> p) {
+        for (JPanel panel : panels) {
             panel.setVisible(!p.contains(panel));
         }
     }

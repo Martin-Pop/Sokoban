@@ -4,7 +4,6 @@ import game.Direction;
 import game.GameState;
 import game.movement.KeyHandler;
 import game.movement.Movement;
-import game.movement.MovementStack;
 import game.player.Player;
 import levels.Level;
 import levels.LevelManager;
@@ -14,23 +13,24 @@ import game.GameMode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Stack;
 
 public class GamePanel extends JPanel {
 
     KeyHandler keyHandler = new KeyHandler();
-    MovementStack stack = new MovementStack();
+    Stack<Movement> stack = new Stack<>();
     private Player player;
 
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
-    private LevelManager levelManager = new LevelManager();
+    private final LevelManager levelManager = new LevelManager();
     private Level level;
     private GameMode gameMode;
-    private GameStateManager gameStateManager;
-    private InformationPanel informationPanel;
+    private final GameStateManager gameStateManager;
+    private final InformationPanel informationPanel;
 
-    private GameTimer gameTimer;
+    private final GameTimer gameTimer;
 
     public GamePanel(int width, int height, GameTimer gameTimer, GameStateManager gameStateManager, InformationPanel informationPanel) {
 
@@ -41,10 +41,10 @@ public class GamePanel extends JPanel {
         this.gameTimer = gameTimer;
         this.informationPanel = informationPanel;
 
-       initialize();
+        initialize();
     }
 
-    private void initialize(){
+    private void initialize() {
         setBounds(50, 50, width, height);
         setBackground(Color.GRAY);
         setFocusable(true);
@@ -52,30 +52,25 @@ public class GamePanel extends JPanel {
         addKeyListener(keyHandler);
     }
 
-    public void setUpLevel(int levelNumber){
-        System.out.println("RESTARTING LEVEL");
+    public void setUpLevel(int levelNumber) {
         levelManager.setCurrentLevel(levelNumber);
 
         this.level = levelManager.getCurrentLevel();
         this.player = new Player(level.getPlayerSpawnX(), level.getPlayerSpawnY());
         resetLevel();
-        //TODO maybe set the timer inside update
         gameTimer.startNewTimer(level.getTimeAmount(), gameMode == GameMode.FREE);
-        System.out.println("just set timer");
         informationPanel.setLevelNumber(level.getLevelNumber());
         gameStateManager.setCurrentState(GameState.PLAYING);
         informationPanel.update();
     }
 
 
-    public void resetLevel(){
+    public void resetLevel() {
         this.level.resetBoxes();
         this.player.resetPlayer();
         this.stack.clear();
-        if (!gameTimer.runOutOfTime() || gameStateManager.getCurrentState() == GameState.WINNER){
+        if (!gameTimer.runOutOfTime() || gameStateManager.getCurrentState() == GameState.WINNER) {
             gameStateManager.setCurrentState(GameState.PLAYING);
-        }else {
-            System.out.println("CAN NO RESET LEVEL");
         }
         informationPanel.update();
     }
@@ -85,7 +80,7 @@ public class GamePanel extends JPanel {
     private Direction lastDirection = Direction.NONE;
 
     private int boxMoved = 0; //if box was moved more tiles in one direction
-    private int speed = 3; // movement speed
+    private final int speed = 3; // movement speed
     private Box box; //current box
 
     public void updateGame() {
@@ -93,37 +88,32 @@ public class GamePanel extends JPanel {
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 
-        //System.out.println("x:" + playerX + " y:" + playerY + " d: "+ direction);
-
-        if (gameTimer.runOutOfTime()){
-            System.out.println("RUN OUT OF TIME");
+        if (gameTimer.runOutOfTime()) { // if player runs out of time
             gameStateManager.setCurrentState(GameState.RUN_OUT_OF_TIME);
             informationPanel.update();
             return;
         }
 
-        if ((direction == Direction.NONE && level.checkWin()) || gameStateManager.getCurrentState() == GameState.WINNER){
-            System.out.println("WINNER");
-            if (gameMode == GameMode.NORMAL){
+        if ((direction == Direction.NONE && level.checkWin()) || gameStateManager.getCurrentState() == GameState.WINNER) {
+            if (gameMode == GameMode.NORMAL) {
                 int next = levelManager.nextLevel();
-                if (next !=0){ // if there still are levels
+                if (next != 0) { // if there still are levels
                     setUpLevel(levelManager.nextLevel());
-                }else {
+                } else {
                     gameStateManager.setCurrentState(GameState.WINNER);
                     gameTimer.reset();
                 }
-            }else {
+            } else {
                 gameStateManager.setCurrentState(GameState.WINNER);
             }
             informationPanel.update();
             return;
         }
 
-        if (keyHandler.revertMovement) {
+        if (keyHandler.revertMovement) { // if player pressed R to revert his movement
             if (!stack.isEmpty()) {
 
                 Movement m = stack.pop();
-                System.out.println(m);
                 player.setPosX(m.getPlayerX());
                 player.setPosY(m.getPlayerY());
 
@@ -133,9 +123,9 @@ public class GamePanel extends JPanel {
                 m.getBox().setCorrectPosition(level.getTileOnPosition(m.getBoxX(), m.getBoxY()).getTileType() == TileType.BOX_DESTINATION);
 
                 keyHandler.revertMovement = false;
+                boxMoved = 0; // fixes if player spams revert when moving box
                 return;
             } else {
-                System.out.println("nothing in stack");
                 keyHandler.revertMovement = false;
             }
         }
@@ -143,8 +133,6 @@ public class GamePanel extends JPanel {
         if (playerX % 50 != 0 || playerY % 50 != 0) { // if player is still moving
 
             int remaining = calculateRemaining(lastDirection, playerX, playerY);
-            //System.out.println("remaining : "+ remaining);
-
             player.move(lastDirection, Math.min(speed, remaining));
 
             if (box != null) { // if box is being pushed
@@ -158,18 +146,20 @@ public class GamePanel extends JPanel {
                 Tile nextTile = level.getNextTile(direction, playerX, playerY, false);
 
                 if (nextTile.getTileType() != TileType.WALL) { // if next tile is not a wall
-                    //System.out.println("getting box" + " " + playerX + " " + playerY);
+
                     box = level.getBox(direction, playerX, playerY, false);
 
                     if (box != null) { // if the next tile has a box
+                        if (lastDirection != direction) { //fixes adding movement to the stack
+                            boxMoved = 0;
+                        }
                         Tile tileBehindBox = level.getNextTile(direction, playerX, playerY, true);
 
-                        if (tileBehindBox.getTileType() != TileType.WALL && level.getBox(direction, playerX, playerY, true) == null) { // if there is no wall or box behind the box
-
+                        if (tileBehindBox.getTileType() != TileType.WALL &&
+                                level.getBox(direction, playerX, playerY, true) == null) { // if there is no wall or box behind the box
                             if (boxMoved == 0) {
                                 stack.add(new Movement(box, box.getPosX(), box.getPosY(), direction));
                             }
-
                             box.move(direction, speed);
                             player.move(direction, speed);
 
@@ -178,6 +168,7 @@ public class GamePanel extends JPanel {
                         }
                     } else {
                         player.move(direction, speed);
+                        boxMoved = 0;// also for fix
                     }
                     lastDirection = direction;
                 }
@@ -186,7 +177,6 @@ public class GamePanel extends JPanel {
             }
 
         }
-        //System.out.println("above repaint");
         repaint();
     }
 
@@ -212,13 +202,11 @@ public class GamePanel extends JPanel {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
-        if (gameMode == GameMode.FREE){
+        if (gameMode == GameMode.FREE) {
             gameStateManager.setCurrentState(GameState.LEVEL_CHOICE);
-        }else {
+        } else {
             setUpLevel(1);
         }
-
-        //
     }
 
     @Override

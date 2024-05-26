@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public MainFrame(){
+    public MainFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(900,750));
+        setSize(new Dimension(900, 750));
         setResizable(false);
 
         setTitle("Sokoban");
@@ -16,8 +16,6 @@ public class MainFrame extends JFrame {
         add(mainPanel);
 
         setVisible(true);
-        //mainPanel.startGame();
-        System.out.println("BACK");
     }
 
 }

@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Level {
@@ -29,19 +28,19 @@ public class Level {
         loadLevel(path);
     }
 
-    public void createTiles(){
+    public void createTiles() {
 
         try {
-            tileMap.put("floor",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png")),TileType.FLOOR));
-            tileMap.put("wall",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png")),TileType.WALL));
-            tileMap.put("boxDestination",new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/boxDestination.png")),TileType.BOX_DESTINATION));
+            tileMap.put("floor", new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/floor.png")), TileType.FLOOR));
+            tileMap.put("wall", new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/wall.png")), TileType.WALL));
+            tileMap.put("boxDestination", new Tile(ImageIO.read(getClass().getResourceAsStream("/levels/tiles/boxDestination.png")), TileType.BOX_DESTINATION));
             tileMap.put("void", new Tile(TileType.VOID));
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("TILE IMAGE PATH DOES NOT EXIST");
         }
     }
 
-    public void loadLevel(String path){
+    public void loadLevel(String path) {
         try {
             InputStream is = getClass().getResourceAsStream(path);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -49,18 +48,18 @@ public class Level {
             int row = 0;
             String line = "";
 
-            while ((line = br.readLine()) != null){
-                if (line.charAt(0) == '#'){
+            while ((line = br.readLine()) != null) {
+                if (line.charAt(0) == '#') {
                     String[] s = line.split("[=]");
-                    if (s[0].equals("#levelNumber")){
+                    if (s[0].equals("#levelNumber")) {
                         this.levelNumber = Integer.parseInt(s[1]);
-                    }else {
+                    } else {
                         this.timeAmount = Integer.parseInt(s[1]);
                     }
-                }else {
+                } else {
                     String[] s = line.split("\\s");
-                    for (int i = 0; i< s.length;i++){
-                        switch (s[i]){
+                    for (int i = 0; i < s.length; i++) {
+                        switch (s[i]) {
                             case "0" -> tiles[i][row] = tileMap.get("void");
                             case "1" -> tiles[i][row] = tileMap.get("floor");
                             case "2" -> tiles[i][row] = tileMap.get("boxDestination");
@@ -71,9 +70,10 @@ public class Level {
                             }
                             case "5" -> { // player
                                 tiles[i][row] = tileMap.get("floor");
-                                playerSpawnX = i*50;
-                                playerSpawnY = row*50;
-                            }case "6" -> {// box but on box destination
+                                playerSpawnX = i * 50;
+                                playerSpawnY = row * 50;
+                            }
+                            case "6" -> {// box but on box destination
                                 tiles[i][row] = tileMap.get("boxDestination");
                                 addBox(i, row, true);
                             }
@@ -83,15 +83,14 @@ public class Level {
                 }
 
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void addBox(int i, int row, boolean defaultCorrectPosition){
+    private void addBox(int i, int row, boolean defaultCorrectPosition) {
         try {
-            this.boxes.add(new Box(i*50,row*50,defaultCorrectPosition,
+            this.boxes.add(new Box(i * 50, row * 50, defaultCorrectPosition,
                     ImageIO.read(getClass().getResourceAsStream("/levels/tiles/grayBox.png")),
                     ImageIO.read(getClass().getResourceAsStream("/levels/tiles/yellowBox.png"))
             ));
@@ -100,49 +99,49 @@ public class Level {
         }
     }
 
-    public void resetBoxes(){
-        for (Box box: boxes) {
+    public void resetBoxes() {
+        for (Box box : boxes) {
             box.resetPosition();
         }
     }
 
-    public Box checkBoxOnPosition(int x, int y){
+    public Box checkBoxOnPosition(int x, int y) {
         Box b = null;
-        for (Box box : boxes){
-            if (box.getPosX() == x && box.getPosY() == y){
+        for (Box box : boxes) {
+            if (box.getPosX() == x && box.getPosY() == y) {
                 b = box;
             }
         }
         return b;
     }
 
-    public Tile getTileOnPosition(int x, int y){
-        return tiles[x/50][y/50];
+    public Tile getTileOnPosition(int x, int y) {
+        return tiles[x / 50][y / 50];
     }
 
-    public boolean checkWin(){
-        for (Box b: boxes) {
-            if (!b.isCorrectPosition()){
+    public boolean checkWin() {
+        for (Box b : boxes) {
+            if (!b.isCorrectPosition()) {
                 return false;
             }
         }
         return true;
     }
 
-    public void drawLevel(Graphics2D g2){
+    public void drawLevel(Graphics2D g2) {
         //floor
         g2.setColor(new Color(0, 60, 67));
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
-                if (tiles[i][j].getTileType() == TileType.VOID){
-                    g2.fillRect(i*50,j*50,50,50);
-                }else {
-                    g2.drawImage(tiles[i][j].getImage(),i*50,j*50,50,50,null);
+                if (tiles[i][j].getTileType() == TileType.VOID) {
+                    g2.fillRect(i * 50, j * 50, 50, 50);
+                } else {
+                    g2.drawImage(tiles[i][j].getImage(), i * 50, j * 50, 50, 50, null);
                 }
             }
         }
         //boxes
-        for (Box box: boxes) {
+        for (Box box : boxes) {
             g2.drawImage(box.getImage(), box.getPosX(), box.getPosY(), 50, 50, null);
         }
     }

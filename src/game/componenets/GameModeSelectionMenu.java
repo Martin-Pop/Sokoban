@@ -7,12 +7,12 @@ import java.awt.*;
 
 public class GameModeSelectionMenu extends JPanel {
 
-    private JButton option1Button = new JButton();
-    private JButton option2Button = new JButton();
+    private final JButton option1Button = new JButton();
+    private final JButton option2Button = new JButton();
 
-    private JLabel headLabel = new JLabel();
-    private JLabel option1Label = new JLabel();
-    private JLabel option2Label = new JLabel();
+    private final JLabel headLabel = new JLabel();
+    private final JLabel option1Label = new JLabel();
+    private final JLabel option2Label = new JLabel();
 
     private GameMode option;
 

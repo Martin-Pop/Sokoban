@@ -8,7 +8,7 @@ import game.componenets.GameTimer;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainPanel extends JPanel implements Runnable{
+public class MainPanel extends JPanel implements Runnable {
 
 
     Thread gameThread = new Thread(this);
@@ -26,26 +26,26 @@ public class MainPanel extends JPanel implements Runnable{
 
     FrameManager frameManager;
 
-    public MainPanel(){
+    public MainPanel() {
         initialize();
     }
 
-    public void initialize(){
-        setBounds(0,0,900,750);
+    public void initialize() {
+        setBounds(0, 0, 900, 750);
         setBackground(new Color(0, 60, 67));
         setLayout(null);
 
         gameModeSelectionMenu = new GameModeSelectionMenu();
         levelSelectionMenu = new LevelSelectionMenu(10);
-        gameStateManager = new GameStateManager(this);
+        gameStateManager = new GameStateManager();
         mainMenu = new MainMenu(gameStateManager);
         controlPanel = new ControlPanel(gameStateManager);
         returnToMenuPanel = new ReturnToMenuPanel(gameStateManager);
         informationPanel = new InformationPanel(gameStateManager);
         gameTimer = new GameTimer();
-        gamePanel = new GamePanel(600,500, gameTimer, gameStateManager, informationPanel);
+        gamePanel = new GamePanel(600, 500, gameTimer, gameStateManager, informationPanel);
 
-        frameManager = new FrameManager(this,mainMenu,gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
+        frameManager = new FrameManager(mainMenu, gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
         gameStateManager.setFrameManager(frameManager);
 
         add(gameModeSelectionMenu);
@@ -57,48 +57,28 @@ public class MainPanel extends JPanel implements Runnable{
         add(levelSelectionMenu);
 
         add(gamePanel);
-        //gameModeSelectionMenu.setVisible(true);
-
-        //add(new MainMenu());
-
         setVisible(true);
 
         startGame();
     }
 
-    public void startGame(){
+    public void startGame() {
         gameStateManager.setCurrentState(GameState.MAIN_MENU);
         gameThread = new Thread(this);
         gameThread.start();
-
     }
-
-    /*public void startThread(){
-        System.out.println(gameThread.getState());
-        if (!gameThread.isAlive()){
-            gameThread = new Thread(this);
-            gameThread.start();
-        }
-    }*/
 
     @Override
     public void run() {
-        double runInterval = 1000000000/60;
+        double runInterval = 1000000000 / 60;
         double nextInterval = System.nanoTime() + runInterval;
 
-        System.out.println("running thread id: "+gameThread.getId());
-        System.out.println("state:" + gameStateManager.getCurrentState());
         GameState state = gameStateManager.getCurrentState();
-        while (gameThread != null){
-            //System.out.println(gameModeSelectionMenu.getGameMode());
-            // state == GameState.PLAYING || state == GameState.RESET_LEVEL || state == GameState.GAME_MODE_CHOICE|| state == GameState.LEVEL_CHOICE
-            //frameManager.update(state);
-
-            switch (state){
+        while (gameThread != null) {
+            switch (state) {
                 case GAME_MODE_CHOICE -> {
-                    //System.out.println("HERE");
                     gameMode = gameModeSelectionMenu.getGameMode();
-                    if (gameMode != null){
+                    if (gameMode != null) {
                         gamePanel.setGameMode(gameMode);
                     }
                 }
@@ -113,7 +93,8 @@ public class MainPanel extends JPanel implements Runnable{
                         gamePanel.setUpLevel(levelSelectionMenu.getSelectedLevel());
                         gameStateManager.setCurrentState(GameState.PLAYING);
                     }
-                }case MAIN_MENU -> {
+                }
+                case MAIN_MENU -> {
                     gameModeSelectionMenu.resetOption();
                     levelSelectionMenu.setSelectedLevel(0);
                 }
@@ -121,9 +102,9 @@ public class MainPanel extends JPanel implements Runnable{
 
             try {
                 double remainingTime = nextInterval - System.nanoTime();
-                remainingTime = remainingTime/1000000;
+                remainingTime = remainingTime / 1000000;
 
-                if (remainingTime < 0){
+                if (remainingTime < 0) {
                     remainingTime = 0;
                 }
                 Thread.sleep((long) remainingTime);
@@ -135,17 +116,5 @@ public class MainPanel extends JPanel implements Runnable{
             }
             state = gameStateManager.getCurrentState();
         }
-        System.out.println("THREAD IS ENDING");
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-       /* Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.BLACK);
-        g2.fillRect(0,400,100,100);*/
-        //gamePanel.draw(g2);
-
     }
 }

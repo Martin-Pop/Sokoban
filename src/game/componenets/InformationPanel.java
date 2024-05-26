@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class InformationPanel extends JPanel {
-    private GameStateManager gameStateManager;
+    private final GameStateManager gameStateManager;
     private JLabel informationLabel;
 
     private int levelNumber;
@@ -23,7 +23,6 @@ public class InformationPanel extends JPanel {
         informationLabel.setBounds(0, 0, 300, 50);
         informationLabel.setHorizontalAlignment(SwingConstants.CENTER);
         informationLabel.setText("INFO:");
-        //informationLabel.setFont(new Font("Ariel", Font.PLAIN, 25));
         informationLabel.setForeground(new Color(227, 254, 247));
         informationLabel.setBackground(new Color(19, 93, 102));
         informationLabel.setFocusable(false);
@@ -31,7 +30,6 @@ public class InformationPanel extends JPanel {
         informationLabel.setBorder(null);
 
         add(informationLabel);
-        //add(levelLabel);
         setVisible(false);
     }
 

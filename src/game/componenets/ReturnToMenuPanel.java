@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class ReturnToMenuPanel extends JPanel {
     private JButton resetButton;
-    private GameStateManager gameStateManager;
+    private final GameStateManager gameStateManager;
 
     public ReturnToMenuPanel(GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
@@ -27,7 +27,6 @@ public class ReturnToMenuPanel extends JPanel {
         resetButton.setBackground(new Color(19, 93, 102));
         resetButton.setFocusable(false);
         resetButton.setBorder(null);
-        //resetButton.setFont(new Font("Ariel", Font.PLAIN, 25));
         resetButton.addActionListener(e -> gameStateManager.setCurrentState(GameState.MAIN_MENU));
 
         add(resetButton);

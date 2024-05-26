@@ -12,11 +12,11 @@ public class Box {
     private final int starterPositionX;
     private final int starterPositionY;
 
-
     private final boolean defaultCorrectPosition;
     private boolean correctPosition;
-    private BufferedImage image;
-    private BufferedImage winnerImage;
+
+    private final BufferedImage image;
+    private final BufferedImage winnerImage;
 
     public Box(int posX, int posY, boolean defaultCorrectPosition, BufferedImage image, BufferedImage winnerImage) {
         this.posX = posX;
@@ -28,6 +28,29 @@ public class Box {
 
         this.starterPositionX = posX;
         this.starterPositionY = posY;
+    }
+
+    public void move(Direction d, int speed) {
+        switch (d) {
+            case UP -> posY -= speed;
+            case DOWN -> posY += speed;
+            case LEFT -> posX -= speed;
+            case RIGHT -> posX += speed;
+        }
+    }
+
+    public BufferedImage getImage() {
+        if (correctPosition) {
+            return winnerImage;
+        } else {
+            return image;
+        }
+    }
+
+    public void resetPosition() {
+        this.posX = starterPositionX;
+        this.posY = starterPositionY;
+        setCorrectPosition(defaultCorrectPosition);
     }
 
     public void setPosX(int posX) {
@@ -53,28 +76,4 @@ public class Box {
     public void setCorrectPosition(boolean correctPosition) {
         this.correctPosition = correctPosition;
     }
-
-    public void move(Direction d, int speed){
-        switch (d){
-            case UP -> posY -= speed;
-            case DOWN ->  posY += speed;
-            case LEFT -> posX -= speed;
-            case RIGHT -> posX += speed;
-        }
-    }
-
-    public BufferedImage getImage() {
-        if (correctPosition){
-            return winnerImage;
-        }else {
-            return image;
-        }
-    }
-
-    public void resetPosition(){
-        this.posX = starterPositionX;
-        this.posY = starterPositionY;
-        setCorrectPosition(defaultCorrectPosition);
-    }
-
 }

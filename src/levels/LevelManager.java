@@ -20,15 +20,15 @@ public class LevelManager {
         levels.add(new Level("/levels/levelFiles/level_seven.txt"));
         levels.add(new Level("/levels/levelFiles/level_eight.txt"));
         levels.add(new Level("/levels/levelFiles/level_nine.txt"));
+        levels.add(new Level("/levels/levelFiles/level_ten.txt"));
     }
 
     public int nextLevel(){
         int next = this.currentLevel.getLevelNumber()+1;
-        if (next <= 2){ //CHANGE BACK TO LEVELS SIZE
+        if (next <= levels.size()){
             return next;
         }else {
             return 0;
-
             //no more levels available
         }
     }

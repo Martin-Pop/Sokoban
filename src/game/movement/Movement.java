@@ -4,13 +4,13 @@ import game.componenets.Box;
 import game.Direction;
 
 public class Movement {
-    private int boxX;
-    private int boxY;
+    private final int boxX;
+    private final int boxY;
 
     private int playerX;
     private int playerY;
 
-    private Box box;
+    private final Box box;
 
     public Movement(Box box, int boxX, int boxY, Direction direction) {
         this.box = box;
@@ -50,13 +50,4 @@ public class Movement {
         return box;
     }
 
-    @Override
-    public String toString() {
-        return "Movement{" +
-                "boxX=" + boxX +
-                ", boxY=" + boxY +
-                ", playerX=" + playerX +
-                ", playerY=" + playerY +
-                '}';
-    }
 }
