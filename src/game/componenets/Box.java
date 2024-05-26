@@ -4,6 +4,9 @@ import game.Direction;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Box
+ */
 public class Box {
 
     private int posX;
@@ -30,6 +33,11 @@ public class Box {
         this.starterPositionY = posY;
     }
 
+    /**
+     * Move method changes the position of the box
+     * @param d direction in which the box was moved in
+     * @param speed how many pixels the box should move by
+     */
     public void move(Direction d, int speed) {
         switch (d) {
             case UP -> posY -= speed;
@@ -39,6 +47,10 @@ public class Box {
         }
     }
 
+    /**
+     * Methode gets the visuals of the box (Image)
+     * @return BufferedImage based on box being on correct position
+     */
     public BufferedImage getImage() {
         if (correctPosition) {
             return winnerImage;
@@ -47,6 +59,9 @@ public class Box {
         }
     }
 
+    /**
+     * Resets the position and correct state, by setting it to the default values
+     */
     public void resetPosition() {
         this.posX = starterPositionX;
         this.posY = starterPositionY;

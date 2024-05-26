@@ -3,6 +3,9 @@ package frame;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Main frame
+ */
 public class MainFrame extends JFrame {
     public MainFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

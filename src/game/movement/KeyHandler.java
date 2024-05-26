@@ -5,6 +5,9 @@ import game.Direction;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Key handler tha handles key press and release
+ */
 public class KeyHandler implements KeyListener {
 
     public Direction direction = Direction.NONE;
@@ -15,6 +18,10 @@ public class KeyHandler implements KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
+    /**
+     * Based on which key was pressed sets the direction and booleans
+     * @param e the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
@@ -39,6 +46,10 @@ public class KeyHandler implements KeyListener {
         }
     }
 
+    /**
+     * Based on which key was pressed sets the booleans to false
+     * @param e the event to be processed
+     */
     @Override
     public void keyReleased(KeyEvent e) {
 

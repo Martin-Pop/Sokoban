@@ -1,9 +1,11 @@
 package levels.tiles;
 
 import levels.TileType;
-
 import java.awt.image.BufferedImage;
 
+/**
+ * Tile on the map, holds BufferedImage and Tile type
+ */
 public class Tile {
 
     private final BufferedImage image;
@@ -27,8 +29,4 @@ public class Tile {
         return tileType;
     }
 
-    @Override
-    public String toString() {
-        return "im a tile";
-    }
 }

@@ -3,6 +3,9 @@ package game.movement;
 import game.componenets.Box;
 import game.Direction;
 
+/**
+ * Movement that the player made when he moved the box
+ */
 public class Movement {
     private final int boxX;
     private final int boxY;
@@ -18,9 +21,12 @@ public class Movement {
         this.boxY = boxY;
 
         setPlayerPosition(direction);
-
     }
 
+    /**
+     * calculates the player position
+     * @param direction in which the box was moved
+     */
     private void setPlayerPosition(Direction direction){
         switch (direction){
             case UP -> {playerX = boxX; playerY = boxY+50;}

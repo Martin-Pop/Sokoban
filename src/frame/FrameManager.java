@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Frame manager controls which panels are visible
+ */
 public class FrameManager {
 
     private final MainMenu mainMenu;
@@ -16,7 +19,7 @@ public class FrameManager {
     private final LevelSelectionMenu levelSelectionMenu;
     private final GamePanel gamePanel;
     private final GameTimer gameTimer;
-    private final ControlPanel controlPanel;
+    private final ResetPanel resetPanel;
     private final ReturnToMenuPanel returnToMenuPanel;
     private final InformationPanel informationPanel;
 
@@ -24,14 +27,14 @@ public class FrameManager {
 
     private GameState lastGameState;
 
-    public FrameManager(MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, GameTimer gameTimer, ControlPanel controlPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
+    public FrameManager(MainMenu mainMenu, GameModeSelectionMenu gameModeSelectionMenu, LevelSelectionMenu levelSelectionMenu, GamePanel gamePanel, GameTimer gameTimer, ResetPanel resetPanel, InformationPanel informationPanel, ReturnToMenuPanel returnToMenuPanel) {
 
         this.mainMenu = mainMenu;
         this.gameModeSelectionMenu = gameModeSelectionMenu;
         this.levelSelectionMenu = levelSelectionMenu;
         this.gamePanel = gamePanel;
         this.gameTimer = gameTimer;
-        this.controlPanel = controlPanel;
+        this.resetPanel = resetPanel;
         this.returnToMenuPanel = returnToMenuPanel;
         this.informationPanel = informationPanel;
 
@@ -40,11 +43,15 @@ public class FrameManager {
         panels.add(this.levelSelectionMenu);
         panels.add(this.gamePanel);
         panels.add(this.gameTimer);
-        panels.add(this.controlPanel);
+        panels.add(this.resetPanel);
         panels.add(this.returnToMenuPanel);
         panels.add(this.informationPanel);
     }
 
+    /**
+     * Method that updates the frames
+     * @param newGameState game state that was passed for an update
+     */
     public void update(GameState newGameState) {
         if (newGameState != lastGameState) {
             switch (newGameState) {
@@ -76,12 +83,20 @@ public class FrameManager {
         }
     }
 
+    /**
+     * Closes all panels except the ones that are passed in
+     * @param p ArrayList of panels that will stay visible
+     */
     private void closeAllExcept(ArrayList<JPanel> p) {
         for (JPanel panel : panels) {
             panel.setVisible(p.contains(panel));
         }
     }
 
+    /**
+     * Opens all panels except the ones that are passed in
+     * @param p ArrayList of panels that will stay invisible
+     */
     private void openAllExcept(ArrayList<JPanel> p) {
         for (JPanel panel : panels) {
             panel.setVisible(!p.contains(panel));

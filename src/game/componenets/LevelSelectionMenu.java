@@ -3,6 +3,9 @@ package game.componenets;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Level selection menu appears when player chose "free" game mode
+ */
 public class LevelSelectionMenu extends JPanel {
 
     private JLabel label;

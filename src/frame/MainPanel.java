@@ -8,8 +8,10 @@ import game.componenets.GameTimer;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Main panel, holds everything
+ */
 public class MainPanel extends JPanel implements Runnable {
-
 
     Thread gameThread = new Thread(this);
     GameStateManager gameStateManager;
@@ -19,7 +21,7 @@ public class MainPanel extends JPanel implements Runnable {
     MainMenu mainMenu;
     GameTimer gameTimer;
     GamePanel gamePanel;
-    ControlPanel controlPanel;
+    ResetPanel resetPanel;
     ReturnToMenuPanel returnToMenuPanel;
     InformationPanel informationPanel;
     LevelSelectionMenu levelSelectionMenu;
@@ -39,18 +41,18 @@ public class MainPanel extends JPanel implements Runnable {
         levelSelectionMenu = new LevelSelectionMenu(10);
         gameStateManager = new GameStateManager();
         mainMenu = new MainMenu(gameStateManager);
-        controlPanel = new ControlPanel(gameStateManager);
+        resetPanel = new ResetPanel(gameStateManager);
         returnToMenuPanel = new ReturnToMenuPanel(gameStateManager);
         informationPanel = new InformationPanel(gameStateManager);
         gameTimer = new GameTimer();
         gamePanel = new GamePanel(600, 500, gameTimer, gameStateManager, informationPanel);
 
-        frameManager = new FrameManager(mainMenu, gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, controlPanel, informationPanel, returnToMenuPanel);
+        frameManager = new FrameManager(mainMenu, gameModeSelectionMenu, levelSelectionMenu, gamePanel, gameTimer, resetPanel, informationPanel, returnToMenuPanel);
         gameStateManager.setFrameManager(frameManager);
 
         add(gameModeSelectionMenu);
         add(mainMenu);
-        add(controlPanel);
+        add(resetPanel);
         add(gameTimer);
         add(informationPanel);
         add(returnToMenuPanel);
@@ -62,12 +64,18 @@ public class MainPanel extends JPanel implements Runnable {
         startGame();
     }
 
+    /**
+     * Starts the game after everything is initialized
+     */
     public void startGame() {
         gameStateManager.setCurrentState(GameState.MAIN_MENU);
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+    /**
+     * Run method runs 60x per second, updates game based on game state
+     */
     @Override
     public void run() {
         double runInterval = 1000000000 / 60;

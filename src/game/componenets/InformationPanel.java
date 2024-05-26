@@ -3,6 +3,9 @@ package game.componenets;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Information panel that holds information about the current game
+ */
 public class InformationPanel extends JPanel {
     private final GameStateManager gameStateManager;
     private JLabel informationLabel;
@@ -33,10 +36,9 @@ public class InformationPanel extends JPanel {
         setVisible(false);
     }
 
-    public void setLevelNumber(int levelNumber) {
-        this.levelNumber = levelNumber;
-    }
-
+    /**
+     * updates the label based on game state
+     */
     public void update(){
         switch (gameStateManager.getCurrentState()){
             case PLAYING -> {
@@ -55,5 +57,8 @@ public class InformationPanel extends JPanel {
 
     }
 
+    public void setLevelNumber(int levelNumber) {
+        this.levelNumber = levelNumber;
+    }
 
 }

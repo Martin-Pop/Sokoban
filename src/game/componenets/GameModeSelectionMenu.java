@@ -5,6 +5,9 @@ import game.GameMode;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel that lets you choose between two game modes
+ */
 public class GameModeSelectionMenu extends JPanel {
 
     private final JButton option1Button = new JButton();
@@ -74,6 +77,9 @@ public class GameModeSelectionMenu extends JPanel {
         return option;
     }
 
+    /**
+     * Resets the option so a new one can be selected
+     */
     public void resetOption(){
         this.option = null;
     }

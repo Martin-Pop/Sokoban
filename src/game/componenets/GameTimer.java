@@ -3,6 +3,9 @@ package game.componenets;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Game timer, panel that holds remaining time
+ */
 public class GameTimer extends JPanel implements Runnable{
 
     private JLabel label;
@@ -41,6 +44,10 @@ public class GameTimer extends JPanel implements Runnable{
         setVisible(false);
     }
 
+    /**
+     * Checks if timer has run out of time
+     * @return true or false
+     */
     public boolean runOutOfTime(){
         if (infiniteTime){
             return false;
@@ -49,6 +56,11 @@ public class GameTimer extends JPanel implements Runnable{
         }
     }
 
+    /**
+     * Starts a new timer
+     * @param time time that the timer should have
+     * @param infiniteTime if timer should be infinite
+     */
     public void startNewTimer(int time, boolean infiniteTime) {
         reset();
         this.timerTime = time;
@@ -59,6 +71,9 @@ public class GameTimer extends JPanel implements Runnable{
         }
     }
 
+    /**
+     * Resets the timer
+     */
     public void reset(){
         this.runOutOfTime = false;
         this.infiniteTime = false;
@@ -70,6 +85,9 @@ public class GameTimer extends JPanel implements Runnable{
         this.timerThread = new Thread(this);
     }
 
+    /**
+     * Run method that makes the timer count down
+     */
     @Override
     public void run() {
         while (timerTime > 0 && !infiniteTime){

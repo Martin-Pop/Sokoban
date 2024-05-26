@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Player
+ */
 public class Player {
 
     private int posX;
@@ -21,6 +24,7 @@ public class Player {
     private final BufferedImage push1;
     private final BufferedImage push2;
 
+    // for player movement visuals
     private int delta;
     private int state;
 
@@ -42,6 +46,11 @@ public class Player {
         }
     }
 
+    /**
+     * Moves player
+     * @param d direction in which player moved
+     * @param speed determines by how many pixels player should move
+     */
     public void move(Direction d, int speed){
         switch (d){
             case UP -> updateY(-speed);
@@ -51,15 +60,80 @@ public class Player {
         }
     }
 
+    /**
+     * Resets player position by setting it to the default position
+     */
     public void resetPlayer(){
         this.posX = starterPositionX;
         this.posY = starterPositionY;
     }
 
+    /**
+     * Draws the player
+     * @param g2 Graphics2D
+     * @param d direction player is heading
+     * @param lastDirection last direction
+     * @param push if player is pushing a box
+     */
+    public void drawPlayer(Graphics2D g2, Direction d, Direction lastDirection, boolean push){
+        if (d != Direction.NONE){
+            rotate(g2, d);
+            if (push){
+                if (state == 0){
+                    g2.drawImage(push1,posX,posY,null);
+                }else {
+                    g2.drawImage(push2,posX,posY,null);
+                }
+            }else {
+                if (state == 0){
+                    g2.drawImage(walk1,posX,posY,null);
+                }else {
+                    g2.drawImage(walk2,posX,posY,null);
+                }
+            }
+
+        }else {
+            rotate(g2, lastDirection);
+            g2.drawImage(stand,posX,posY,null);
+        }
+
+        delta++;
+        if (delta > 10) {
+            if (state == 0) {
+                state = 1;
+            } else {
+                state = 0;
+            }
+            delta = 0;
+        }
+    }
+
+    /**
+     * Rotates the Graphics2D based on direction, so it can draw the image rotated
+     * @param g2 Graphics2D
+     * @param d direction
+     */
+    private void rotate(Graphics2D g2, Direction d){
+        switch (d){
+            case UP ->  g2.rotate(Math.toRadians(0),posX+25,posY+25);
+            case DOWN -> g2.rotate(Math.toRadians(180),posX+25,posY+25);
+            case LEFT -> g2.rotate(Math.toRadians(270),posX+25,posY+25);
+            case RIGHT -> g2.rotate(Math.toRadians(90),posX+25,posY+25);
+        }
+    }
+
+    /**
+     * Updates the X position
+     * @param value that is added to the X position
+     */
     public void updateX(int value){
         this.posX += value;
     }
 
+    /**
+     * Updates the Y position
+     * @param value that is added to the Y position
+     */
     public void updateY(int value){
         this.posY += value;
     }
@@ -79,51 +153,5 @@ public class Player {
     public int getPosY() {
         return posY;
     }
-
-
-    public void drawPlayer(Graphics2D g2, Direction d, Direction lastDirection, boolean push){
-        if (d != Direction.NONE){
-            rotate(g2, d);
-            if (push){
-                if (state == 0){
-                    g2.drawImage(push1,posX,posY,null);
-                }else {
-                    g2.drawImage(push2,posX,posY,null);
-                }
-            }else {
-                if (state == 0){
-                    g2.drawImage(walk1,posX,posY,null);
-                }else {
-                    g2.drawImage(walk2,posX,posY,null);
-                }
-            }
-
-
-        }else {
-            rotate(g2, lastDirection);
-
-            g2.drawImage(stand,posX,posY,null);
-        }
-
-        delta++;
-        if (delta > 10) {
-            if (state == 0) {
-                state = 1;
-            } else {
-                state = 0;
-            }
-            delta = 0;
-        }
-    }
-
-    private void rotate(Graphics2D g2, Direction d){
-        switch (d){
-            case UP ->  g2.rotate(Math.toRadians(0),posX+25,posY+25);
-            case DOWN -> g2.rotate(Math.toRadians(180),posX+25,posY+25);
-            case LEFT -> g2.rotate(Math.toRadians(270),posX+25,posY+25);
-            case RIGHT -> g2.rotate(Math.toRadians(90),posX+25,posY+25);
-        }
-    }
-
 
 }

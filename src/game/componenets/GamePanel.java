@@ -15,6 +15,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Stack;
 
+/**
+ * Game panel is a "main" panel which shows the game
+ */
 public class GamePanel extends JPanel {
 
     KeyHandler keyHandler = new KeyHandler();
@@ -52,6 +55,10 @@ public class GamePanel extends JPanel {
         addKeyListener(keyHandler);
     }
 
+    /**
+     * Sets up a new level
+     * @param levelNumber number of level to set up
+     */
     public void setUpLevel(int levelNumber) {
         levelManager.setCurrentLevel(levelNumber);
 
@@ -64,7 +71,9 @@ public class GamePanel extends JPanel {
         informationPanel.update();
     }
 
-
+    /**
+     * Resets the current level
+     */
     public void resetLevel() {
         this.level.resetBoxes();
         this.player.resetPlayer();
@@ -83,18 +92,23 @@ public class GamePanel extends JPanel {
     private final int speed = 3; // movement speed
     private Box box; //current box
 
+    /**
+     * "Main" updating method for the game
+     */
     public void updateGame() {
 
         int playerX = player.getPosX();
         int playerY = player.getPosY();
 
+        //TIMER
         if (gameTimer.runOutOfTime()) { // if player runs out of time
             gameStateManager.setCurrentState(GameState.RUN_OUT_OF_TIME);
             informationPanel.update();
             return;
         }
 
-        if ((direction == Direction.NONE && level.checkWin()) || gameStateManager.getCurrentState() == GameState.WINNER) {
+        //WINNING
+        if ((direction == Direction.NONE && level.checkWin()) || gameStateManager.getCurrentState() == GameState.WINNER) { // if player wins the game
             if (gameMode == GameMode.NORMAL) {
                 int next = levelManager.nextLevel();
                 if (next != 0) { // if there still are levels
@@ -110,6 +124,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
+        //REVERT MOVEMENT
         if (keyHandler.revertMovement) { // if player pressed R to revert his movement
             if (!stack.isEmpty()) {
 
@@ -130,6 +145,7 @@ public class GamePanel extends JPanel {
             }
         }
 
+        //PLAYER AND BOX MOVEMENT
         if (playerX % 50 != 0 || playerY % 50 != 0) { // if player is still moving
 
             int remaining = calculateRemaining(lastDirection, playerX, playerY);
@@ -180,6 +196,13 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
+    /**
+     * Calculates remaining pixels to in order to stay in the grid
+     * @param d direction in which the player is moving
+     * @param playerX player x position
+     * @param playerY player y position
+     * @return remaining pixels
+     */
     private int calculateRemaining(Direction d, int playerX, int playerY) {
         switch (d) {
             case UP -> {
@@ -200,6 +223,10 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * Sets the game mode, if game mode is "normal" the game starts at level 1, if game mode is "free" let player choose his level
+     * @param gameMode chosen game mode
+     */
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
         if (gameMode == GameMode.FREE) {
@@ -209,6 +236,10 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * Paints the level and then the player
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

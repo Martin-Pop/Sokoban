@@ -10,6 +10,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Level
+ */
 public class Level {
 
     private int levelNumber;
@@ -28,6 +31,9 @@ public class Level {
         loadLevel(path);
     }
 
+    /**
+     * Creates HashMap of available tiles
+     */
     public void createTiles() {
 
         try {
@@ -40,6 +46,10 @@ public class Level {
         }
     }
 
+    /**
+     * Loads level based on file path into Array
+     * @param path file path
+     */
     public void loadLevel(String path) {
         try {
             InputStream is = getClass().getResourceAsStream(path);
@@ -88,6 +98,12 @@ public class Level {
         }
     }
 
+    /**
+     * Adds box into ArrayList
+     * @param i - colum
+     * @param row - row
+     * @param defaultCorrectPosition if box is on correct position by default
+     */
     private void addBox(int i, int row, boolean defaultCorrectPosition) {
         try {
             this.boxes.add(new Box(i * 50, row * 50, defaultCorrectPosition,
@@ -99,26 +115,44 @@ public class Level {
         }
     }
 
+    /**
+     * Resets all the boxes position
+     */
     public void resetBoxes() {
         for (Box box : boxes) {
             box.resetPosition();
         }
     }
 
+    /**
+     * Checks if box is on a
+     * @param x position
+     * @param y position
+     * @return box or null
+     */
     public Box checkBoxOnPosition(int x, int y) {
-        Box b = null;
         for (Box box : boxes) {
             if (box.getPosX() == x && box.getPosY() == y) {
-                b = box;
+                return box;
             }
         }
-        return b;
+        return null;
     }
 
+    /**
+     * Returns tile on position
+     * @param x position
+     * @param y position
+     * @return the tile
+     */
     public Tile getTileOnPosition(int x, int y) {
         return tiles[x / 50][y / 50];
     }
 
+    /**
+     * Checks if all boxes are on correct position
+     * @return true or false
+     */
     public boolean checkWin() {
         for (Box b : boxes) {
             if (!b.isCorrectPosition()) {
@@ -128,6 +162,10 @@ public class Level {
         return true;
     }
 
+    /**
+     * Draws the level
+     * @param g2 Graphics2D
+     */
     public void drawLevel(Graphics2D g2) {
         //floor
         g2.setColor(new Color(0, 60, 67));
@@ -146,6 +184,14 @@ public class Level {
         }
     }
 
+    /**
+     * Gets box
+     * @param d direction
+     * @param x position
+     * @param y position
+     * @param checkSecondNextTile check the tile after the tile
+     * @return Box or null
+     */
     public Box getBox(Direction d, int x, int y, Boolean checkSecondNextTile) {
         int multiplayer = 1;
         if (checkSecondNextTile) {
@@ -170,6 +216,14 @@ public class Level {
         }
     }
 
+    /**
+     * Gets tile
+     * @param d direction
+     * @param x position
+     * @param y position
+     * @param checkSecondNextTile to check the tile after the tile
+     * @return
+     */
     public Tile getNextTile(Direction d, int x, int y, Boolean checkSecondNextTile) {
         int multiplayer = 1;
         if (checkSecondNextTile) {

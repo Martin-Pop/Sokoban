@@ -1,5 +1,8 @@
 package game;
 
+/**
+ * Game state
+ */
 public enum GameState {
     PLAYING,
     MAIN_MENU,

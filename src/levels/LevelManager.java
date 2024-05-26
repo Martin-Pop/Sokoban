@@ -2,6 +2,9 @@ package levels;
 
 import java.util.ArrayList;
 
+/**
+ * Contains all the levels, holds the current one
+ */
 public class LevelManager {
     private final ArrayList<Level> levels = new ArrayList<>();
     private Level currentLevel;
@@ -23,16 +26,23 @@ public class LevelManager {
         levels.add(new Level("/levels/levelFiles/level_ten.txt"));
     }
 
+    /**
+     * Sets the next level as the current one
+     * @return number of the level or 0 if there are no more levels
+     */
     public int nextLevel(){
         int next = this.currentLevel.getLevelNumber()+1;
         if (next <= levels.size()){
             return next;
         }else {
-            return 0;
-            //no more levels available
+            return 0; //no more levels available
         }
     }
 
+    /**
+     * Sets current level
+     * @param levelNumber number of the level
+     */
     public void setCurrentLevel(int levelNumber){
         for (Level l: levels) {
             if (l.getLevelNumber() == levelNumber){

@@ -5,11 +5,14 @@ import game.GameState;
 import javax.swing.*;
 import java.awt.*;
 
-public class ControlPanel extends JPanel {
+/**
+ * Reset panel lets you reset current level
+ */
+public class ResetPanel extends JPanel {
 
     private final GameStateManager gameStateManager;
 
-    public ControlPanel(GameStateManager gameStateManager) {
+    public ResetPanel(GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
         initialize();
     }

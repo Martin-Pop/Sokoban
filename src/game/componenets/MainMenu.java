@@ -5,6 +5,9 @@ import game.GameState;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Main menu
+ */
 public class MainMenu extends JPanel {
 
     private final GameStateManager gameStateManager;
@@ -31,10 +34,5 @@ public class MainMenu extends JPanel {
 
         add(button);
         setVisible(false);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
     }
 }

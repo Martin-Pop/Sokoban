@@ -3,6 +3,9 @@ package game.componenets;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Level button is a clickable button when player chooses his level
+ */
 public class LevelButton extends JButton {
 
     public LevelButton(LevelSelectionMenu menu , int levelNumber) {
@@ -16,6 +19,4 @@ public class LevelButton extends JButton {
         setFont(new Font("Dialog", Font.PLAIN, 25));
         addActionListener(e -> menu.setSelectedLevel(levelNumber)); // this is why I need separated class
     }
-
-
 }

@@ -5,6 +5,9 @@ import game.GameState;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel that allows player to return back to menu
+ */
 public class ReturnToMenuPanel extends JPanel {
     private JButton resetButton;
     private final GameStateManager gameStateManager;
